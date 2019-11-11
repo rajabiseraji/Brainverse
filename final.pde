@@ -1,6 +1,7 @@
 Toros toros;
 Slider slider;
 boolean interactionEnabled = false;
+int sliderValue = 20;
 
 void setup() {
 	size(700, 700, P3D);
@@ -12,8 +13,9 @@ void setup() {
 
 void draw() {
 	background(#525252);
+	sliderValue = slider.drawSlider();
+	toros.setDelta(sliderValue);
 	toros.updateShape(interactionEnabled);
-	slider.drawSlider();
 }
 
 void mouseDragged() {

@@ -4,29 +4,30 @@ public class Slider {
     PVector s1; // change to position
     int nobSize = 20;
     boolean s1Over; // change to isHovered
-    int slider1y; // change to yPosition
+    float slider1y; // change to yPosition
     int min = 0;
     int max = 100;
     String sliderText = "";
+    private int sliderValue = 0;
 
     PShape sliderShape;
     
 
     public Slider (PVector position, int nobSize, String sliderText, int min, int max) {
-        slider1y = height/3;
-        s1 = new PVector(width-20, slider1y); // s1 = position
+        slider1y = position.y;
+        s1 = position; // s1 = position
         this.nobSize = nobSize;
         this.sliderText = sliderText;
         this.min = min;
         this.max = max;
     }
 
-    public void drawSlider() {
+    public int drawSlider() {
         ellipseMode(CENTER);
         smooth();
         fill(0);
-
-        text(sliderText + int(map(s1.x, 20, width-20 ,25, 100)), 20, slider1y - nobSize);
+        sliderValue = (int)map(s1.x, 20, width-20 ,25, 100);
+        text(sliderText + sliderValue, 20, slider1y - nobSize);
         stroke(0);
         line(20, slider1y, width-20, slider1y);
 
@@ -36,6 +37,7 @@ public class Slider {
         checkHover();
         // vectorLogic();
         vectorLimiter();
+        return sliderValue;
     }
 
     void checkHover() {

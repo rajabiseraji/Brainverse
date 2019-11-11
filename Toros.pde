@@ -6,6 +6,7 @@ public class Toros {
     private float miniCircleRadius = 30;
     private float lastMouseX = 0;
     private float lastMouseY = 0;
+    private int deltaValue = 20; // for now between 20 and 100
     int k=0;
     int N=50;
     
@@ -33,10 +34,6 @@ public class Toros {
     }
     float getMiniCircleRadius() {
         return this.miniCircleRadius;
-    }
-
-    void mouseDragged() {
-
     }
 
     void updateShape(boolean isInteractionEnabled) {
@@ -104,6 +101,14 @@ public class Toros {
             miniCircleRadius++;
         if(N > 30)
             N-=10;
+    }
+
+    public void setDelta(int newDeltaValue) {
+        this.deltaValue = newDeltaValue;
+        numberOfCircle = (int)map(newDeltaValue, 0, 100, 5, 99); // 0 -> 20 ... 1 up -> 1 up
+        bigCircleRadius = map(newDeltaValue, 0, 100, 11, 299);
+        miniCircleRadius = map(newDeltaValue, 0, 100, 100, 5); 
+        N = (int)map(newDeltaValue, 0, 100, 30, 300);
     }
 }
 
