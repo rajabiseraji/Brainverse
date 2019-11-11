@@ -74,7 +74,7 @@ public class Toros {
         // the bigCircleRadius and decrease smallCircleRadius and also increase N!
         if(numberOfCircle < 100)
             numberOfCircle++;
-        if(bigCircleRadius < 500)
+        if(bigCircleRadius < 300)
             bigCircleRadius+=3;
         if(miniCircleRadius > 5)
             miniCircleRadius--;
@@ -87,7 +87,7 @@ public class Toros {
         if(numberOfCircle > 4)
             numberOfCircle--;
         if(bigCircleRadius > 10)
-            bigCircleRadius--;
+            bigCircleRadius-=3;
         if(miniCircleRadius < 100)
             miniCircleRadius++;
         if(N > 30)
