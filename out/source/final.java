@@ -12,18 +12,33 @@ import java.io.InputStream;
 import java.io.OutputStream; 
 import java.io.IOException; 
 
-public class final extends PApplet {
+public class Final extends PApplet {
 
 Toros toros;
+Slider slider;
+boolean interactionEnabled = false;
+int sliderValue = 20;
+PImage img;
 
 public void setup() {
-	
-	background(0xff525252);
-	toros = new Toros(20, 100, 30);
+  
+  img = loadImage("bg.png");
+  background(img);
+  // background(#525252);
+  toros = new Toros(20, 100, 30);
+  PVector sliderPosition = new PVector(120, height - 50);
+  slider = new Slider(sliderPosition, 20, "Delta", 20, 20, new PVector(width - 140, 0));
 }
 
 public void draw() {
-	toros.updateShape();
+  background(img);
+  sliderValue = slider.drawSlider();
+  toros.setDelta(sliderValue);
+  toros.updateShape(interactionEnabled);
+}
+
+public void mouseDragged() {
+  slider.mouseDragged();
 }
 
 public void keyPressed(){
@@ -34,7 +49,17 @@ public void keyPressed(){
         else if (keyCode == DOWN) {
             toros.decreaseDelta();
         } 
-    }
+    } else if(key == 'i') {
+    switchInteraction();
+  }
+
+}
+
+public void switchInteraction() {
+  if(interactionEnabled)
+    interactionEnabled = false;
+  else 
+    interactionEnabled = true;
 }
 public class BrainAtom {
     private float mass = 0;
@@ -175,145 +200,84 @@ interface Displayable {
 //     }
 
 // }
-PVector s1, s2, s3;
-int nobSize = 20;
-boolean s1Over, s2Over, s3Over;
-int slider1y, slider2y, slider3y;
 
-public void setup() {
-  size(500, 500);
-  background(255);
-  rectMode(CENTER);
-  smooth();
-  fill(0);
 
-  slider1y = height/3;
-  slider2y = height/2;
-  slider3y = height/3*2;
+public class Slider {
+    PVector s1; // change to - nob position
+    PVector sliderPosition;
+    PVector sliderSize;
+    int nobSize = 20;
+    boolean s1Over; // change to isHovered
+    float slider1y; // change to yPosition
+    int min = 0;
+    int max = 100;
+    String sliderText = "";
+    private int sliderValue = 0;
 
-  s1 = new PVector(width-20, slider1y);
-  s2 = new PVector(width-20, slider2y);
-  s3 = new PVector(width-20, slider3y);
-}
+    PShape sliderShape;
+    
 
-public void draw() {
-  background(255);
+    public Slider (PVector sliderPosition, int nobSize, String sliderText, int min, int max, PVector sliderSize) {
+        slider1y = sliderPosition.y;
+        s1 = new PVector(sliderPosition.x, sliderPosition.y); // s1 = position
+        this.sliderPosition = sliderPosition;
+        this.nobSize = nobSize;
+        this.sliderText = sliderText;
+        this.min = min;
+        this.max = max;
+        this.sliderSize = sliderSize;
+    }
 
-  text("Minimum payment goal: $" + PApplet.parseInt(map(s1.x, 20, width-20 ,25, 100)), 20, slider1y - nobSize);
-  text("Credit utilization goal: " + PApplet.parseInt(100 - map(s2.x, 20, width-20 ,0, 70)) + "%", 20, slider2y - nobSize);
-  text("Projected line of credit: $" + PApplet.parseInt(map(s3.x, 20, width-20 ,300, 700)), 20, slider3y - nobSize);
-  stroke(0);
-  line(20, slider1y, width-20, slider1y);
-  line(20, slider2y, width-20, slider2y);  
-  line(20, slider3y, width-20, slider3y);
+    public int drawSlider() {
+        ellipseMode(CENTER);
+        smooth();
+        fill(0xffffffff);
+        sliderValue = (int)map(s1.x, sliderPosition.x, sliderPosition.x + sliderSize.x , 0, 100);
+        text(sliderText + "  " + sliderValue, sliderPosition.x - textWidth(sliderText) - 50, slider1y + 5);
+        stroke(0xffffffff);
+        line(sliderPosition.x, slider1y, sliderPosition.x + sliderSize.x, slider1y);
 
-  noStroke();
-  rect(s1.x, s1.y, nobSize, nobSize);
-  rect(s2.x, s2.y, nobSize, nobSize);
-  rect(s3.x, s3.y, nobSize, nobSize);
+        noStroke();
+        fill(0xffffffff, 190);
+        ellipse(s1.x, s1.y, nobSize, nobSize);
+        fill(0);
 
-  checkHover();
-  vectorLogic();
-  vectorLimiter();
-}
+        checkHover();
+        // vectorLogic();
+        vectorLimiter();
+        return sliderValue;
+    }
 
-public void mouseDragged() {
-  if (s1Over) {
-    s1.x = mouseX;
-  } else if (s2Over) {
-    s2.x = mouseX;
-  } else if (s3Over) {
-    s3.x = mouseX;
-  }
-}
+    public void checkHover() {
+        float distance = this.s1.dist(new PVector(mouseX, mouseY));
+        if (distance <= nobSize) {
+            s1Over = true;
+        } else {
+            s1Over = false;
+        }
 
-public void checkHover() {
-  if (mouseX > s1.x - nobSize &&
-    mouseX < s1.x + nobSize &&
-    mouseY > s1.y - nobSize &&
-    mouseY < s1.y + nobSize) {
-    s1Over = true;
-  } else {
-    s1Over = false;
-  }
-  if (mouseX > s2.x - nobSize &&
-    mouseX < s2.x + nobSize &&
-    mouseY > s2.y - nobSize &&
-    mouseY < s2.y + nobSize) {
-    s2Over = true;
-  } else {
-    s2Over = false;
-  }
-  if (mouseX > s3.x - nobSize &&
-    mouseX < s3.x + nobSize &&
-    mouseY > s3.y - nobSize &&
-    mouseY < s3.y + nobSize) {
-    s3Over = true;
-  } else {
-    s3Over = false;
-  }
-
-  if (!s1Over && !s2Over && !s3Over) {
-    cursor(ARROW);
-  } else {
-    cursor(HAND);
-  }
-}
-
-public void vectorLogic() {
-  // relationship
-  if (s1Over && mousePressed) {
-    s3.x = (s1.x + s2.x) / 2;
-  } else if (s2Over && mousePressed) {
-    s3.x = (s1.x + s2.x) / 2;
-  } else if (s3Over && mousePressed) {
-    if(s1.x > s2.x) {
-      s1.x = (s3.x*2) - s2.x;
-        if(s1.x >= width-21){
-          s2.x = (s3.x*2) - s1.x;
+        if (!s1Over) {
+            cursor(ARROW);
+        } else {
+            cursor(HAND);
         }
     }
-    if(s2.x > s1.x) {
-      s2.x = (s3.x*2) - s1.x;
+
+    public void vectorLimiter() {
+        // limiting sliders  
+        if (s1.x < 20) {
+            s1.x = 20;
+        }
+        if (s1.x > width-20) {
+            s1.x = width-20;
+        }
     }
-    if(s3.x < ((s1.x + s2.x) / 2)){
-      s2.x = s3.x;
-      s1.x = s3.x;
+
+    public void mouseDragged() {
+        if (s1Over) {
+            s1.x = mouseX;
+        } 
     }
-    if(s3.x > ((s1.x + s2.x) / 2)){
-      s2.x = s3.x;
-      s1.x = s3.x;
-    }
-    
-  }
-
-  if (s3.x < (s1.x + s2.x) / 2) {
-    s3.x = (s1.x + s2.x) / 2;
-  }
-}
-
-public void vectorLimiter() {
-  // limiting sliders  
-  if (s1.x < 20) {
-    s1.x = 20;
-  }
-  if (s1.x > width-20) {
-    s1.x = width-20;
-  }
-
-  if (s2.x < 20) {
-    s2.x = 20;
-  }
-  if (s2.x > width-20) {
-    s2.x = width-20;
-  }
-
-  if (s3.x < 20) {
-    s3.x = 20;
-  }
-  if (s3.x > width-20) {
-    s3.x = width-20;
-  }
 }
 
 
@@ -321,6 +285,13 @@ public class Toros {
     private int numberOfCircle = 20;
     private float bigCircleRadius = 100;
     private float miniCircleRadius = 30;
+    private float lastMouseX = 0;
+    private float lastMouseY = 0;
+    private int deltaValue = 20; // for now between 20 and 100
+    private int startColorValue = 0xff3371a3;
+    private int endColorValue = 0xffa4bad2;
+    private int currentColorValue = startColorValue;
+    private int step = 0x1;
     int k=0;
     int N=50;
     
@@ -328,6 +299,7 @@ public class Toros {
         this.numberOfCircle = numberOfCircle;
         this.bigCircleRadius = bigCircleRadius;
         this.miniCircleRadius = miniCircleRadius;
+        step = (endColorValue - startColorValue) / (numberOfCircle * N / 2);
     }
 
     public void setNumberOfCircle(int numberOfCircle) {
@@ -350,9 +322,14 @@ public class Toros {
         return this.miniCircleRadius;
     }
 
-    public void updateShape() {
-        float xx = map(mouseX, 0, width, 0, 360);
-        float yy = map(mouseY, 0, height, 0, 360);
+    public void updateShape(boolean isInteractionEnabled) {
+        if(isInteractionEnabled) {
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+        }
+        float xx = map(lastMouseX, 0, width, 0, 360);
+        float yy = map(lastMouseY, 0, height, 0, 360);
+        pushMatrix();
         translate(width/2, height/2);
         rotateX(radians(-yy));
         rotateY(radians(-xx));
@@ -371,18 +348,25 @@ public class Toros {
             circles(k);
             popMatrix();
         }
+        popMatrix();
         k+=1;
     }
 
     private void circles(int k) {
+        int currentColor = currentColorValue;
         for (int i=0; i<numberOfCircle; i++) {
+            currentColor = currentColorValue;
             float ang = i*360/numberOfCircle;
             float x = miniCircleRadius*cos(radians(ang+k));
             float y = miniCircleRadius*sin(radians(ang+k));
             strokeWeight(2);
-            if (i%2==0)stroke(0xffFAB800);
+            if (i%2==0) {
+                currentColorValue += step;
+                stroke(currentColor);
+            }
             else stroke(-1);
             point(x, y);
+            // ellipse(x, y, 2, 2);
         }
     }
 
@@ -391,7 +375,7 @@ public class Toros {
         // the bigCircleRadius and decrease smallCircleRadius and also increase N!
         if(numberOfCircle < 100)
             numberOfCircle++;
-        if(bigCircleRadius < 500)
+        if(bigCircleRadius < 300)
             bigCircleRadius+=3;
         if(miniCircleRadius > 5)
             miniCircleRadius--;
@@ -404,17 +388,25 @@ public class Toros {
         if(numberOfCircle > 4)
             numberOfCircle--;
         if(bigCircleRadius > 10)
-            bigCircleRadius--;
+            bigCircleRadius-=3;
         if(miniCircleRadius < 100)
             miniCircleRadius++;
         if(N > 30)
             N-=10;
     }
+
+    public void setDelta(int newDeltaValue) {
+        this.deltaValue = newDeltaValue;
+        numberOfCircle = (int)map(newDeltaValue, 0, 100, 5, 99); // 0 -> 20 ... 1 up -> 1 up
+        bigCircleRadius = map(newDeltaValue, 0, 100, 11, 299);
+        miniCircleRadius = map(newDeltaValue, 0, 100, 100, 5); 
+        N = (int)map(newDeltaValue, 0, 100, 30, 300);
+    }
 }
 
-  public void settings() { 	size(700, 700, P3D); }
+  public void settings() {  size(768, 1024, P3D); }
   static public void main(String[] passedArgs) {
-    String[] appletArgs = new String[] { "final" };
+    String[] appletArgs = new String[] { "Final" };
     if (passedArgs != null) {
       PApplet.main(concat(appletArgs, passedArgs));
     } else {
