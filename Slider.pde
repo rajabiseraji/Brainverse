@@ -1,7 +1,9 @@
 
 
 public class Slider {
-    PVector s1; // change to position
+    PVector s1; // change to - nob position
+    PVector sliderPosition;
+    PVector sliderSize;
     int nobSize = 20;
     boolean s1Over; // change to isHovered
     float slider1y; // change to yPosition
@@ -13,23 +15,25 @@ public class Slider {
     PShape sliderShape;
     
 
-    public Slider (PVector position, int nobSize, String sliderText, int min, int max) {
-        slider1y = position.y;
-        s1 = position; // s1 = position
+    public Slider (PVector sliderPosition, int nobSize, String sliderText, int min, int max, PVector sliderSize) {
+        slider1y = sliderPosition.y;
+        s1 = new PVector(sliderPosition.x, sliderPosition.y); // s1 = position
+        this.sliderPosition = sliderPosition;
         this.nobSize = nobSize;
         this.sliderText = sliderText;
         this.min = min;
         this.max = max;
+        this.sliderSize = sliderSize;
     }
 
     public int drawSlider() {
         ellipseMode(CENTER);
         smooth();
         fill(0);
-        sliderValue = (int)map(s1.x, 20, width-20 ,25, 100);
-        text(sliderText + sliderValue, 20, slider1y - nobSize);
+        sliderValue = (int)map(s1.x, sliderPosition.x, sliderPosition.x + sliderSize.x , 0, 100);
+        text(sliderText + sliderValue + " ", sliderPosition.x, slider1y - nobSize);
         stroke(0);
-        line(20, slider1y, width-20, slider1y);
+        line(sliderPosition.x, slider1y, sliderPosition.x + sliderSize.x, slider1y);
 
         noStroke();
         ellipse(s1.x, s1.y, nobSize, nobSize);
