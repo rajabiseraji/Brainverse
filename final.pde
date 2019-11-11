@@ -1,5 +1,6 @@
 Toros toros;
 Slider slider;
+boolean interactionEnabled = false;
 
 void setup() {
 	size(700, 700, P3D);
@@ -11,8 +12,12 @@ void setup() {
 
 void draw() {
 	background(#525252);
-	toros.updateShape();
+	toros.updateShape(interactionEnabled);
 	slider.drawSlider();
+}
+
+void mouseDragged() {
+	slider.mouseDragged();
 }
 
 void keyPressed(){
@@ -23,5 +28,15 @@ void keyPressed(){
         else if (keyCode == DOWN) {
             toros.decreaseDelta();
         } 
-    }
+    } else if(key == 'i') {
+		switchInteraction();
+	}
+
+}
+
+void switchInteraction() {
+	if(interactionEnabled)
+		interactionEnabled = false;
+	else 
+		interactionEnabled = true;
 }

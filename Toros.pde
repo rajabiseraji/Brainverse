@@ -4,6 +4,8 @@ public class Toros {
     private int numberOfCircle = 20;
     private float bigCircleRadius = 100;
     private float miniCircleRadius = 30;
+    private float lastMouseX = 0;
+    private float lastMouseY = 0;
     int k=0;
     int N=50;
     
@@ -33,9 +35,18 @@ public class Toros {
         return this.miniCircleRadius;
     }
 
-    void updateShape() {
-        float xx = map(mouseX, 0, width, 0, 360);
-        float yy = map(mouseY, 0, height, 0, 360);
+    void mouseDragged() {
+
+    }
+
+    void updateShape(boolean isInteractionEnabled) {
+        if(isInteractionEnabled) {
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+        }
+        float xx = map(lastMouseX, 0, width, 0, 360);
+        float yy = map(lastMouseY, 0, height, 0, 360);
+        pushMatrix();
         translate(width/2, height/2);
         rotateX(radians(-yy));
         rotateY(radians(-xx));
@@ -54,6 +65,7 @@ public class Toros {
             circles(k);
             popMatrix();
         }
+        popMatrix();
         k+=1;
     }
 
