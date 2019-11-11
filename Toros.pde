@@ -43,36 +43,52 @@ void circles(int k) {
   }
 }
 
+void increaseDelta() {
+    // increasing delta would increase the number of circles and increasing 
+    // the bigCircleRadius and decrease smallCircleRadius
+
+}
+
+void decreaseDelta()
+
 void keyPressed(){
   if(key == CODED) { 
     // pts
     if (keyCode == UP) { 
-      if (bigCircleRadius < 300){
-        bigCircleRadius++;
-      } 
+        increaseDelta();
+    //   if (bigCircleRadius < 300){
+    //     bigCircleRadius++;
+    //   } 
     } 
-    else if (keyCode == DOWN) { 
-      if (bigCircleRadius > 10){
-        bigCircleRadius--;
-      }
+    else if (keyCode == DOWN) {
+        decreaseDelta();
+    //   if (bigCircleRadius > 10){
+    //     bigCircleRadius--;
+    //   }
     } 
     // extrusion length
-    if (keyCode == LEFT) { 
-      if (miniCircleRadius > 5){
-        miniCircleRadius--;
-      }
-    } 
-    else if (keyCode == RIGHT) { 
-      if (miniCircleRadius < 100){
-        miniCircleRadius++;
-      }
-    } 
-  }
-  if (key == 'a') {
-      if(numberOfCircle > 4)
-        numberOfCircle--;
-  } else if (key == 'd'){
-      if(numberOfCircle < 100)
-        numberOfCircle++;
-  }
+//     if (keyCode == LEFT) { 
+//       if (miniCircleRadius > 5){
+//         miniCircleRadius--;
+//       }
+//     } 
+//     else if (keyCode == RIGHT) { 
+//       if (miniCircleRadius < 100){
+//         miniCircleRadius++;
+//       }
+//     } 
+//   }
+//   if (key == 'a') {
+//       if(numberOfCircle > 4)
+//         numberOfCircle--;
+//   } else if (key == 'd'){
+//       if(numberOfCircle < 100)
+//         numberOfCircle++;
+//   } else if (key == 'n') {
+//       if(N > 5)
+//         N--;
+//   } else if (key == 'm') {
+//       if(N < 200)
+//         N++;
+//   } 
 }
