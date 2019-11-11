@@ -1,7 +1,7 @@
-public class ShapeManager {
+// public class ShapeManager {
 
-    public ShapeManager (arguments) {
+//     public ShapeManager (arguments) {
         
-    }
+//     }
 
-}
+// }
