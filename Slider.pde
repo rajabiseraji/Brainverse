@@ -31,7 +31,7 @@ public class Slider {
         smooth();
         fill(#ffffff);
         sliderValue = (int)map(s1.x, sliderPosition.x, sliderPosition.x + sliderSize.x , 0, 100);
-        text(sliderText + sliderValue + " ", sliderPosition.x - textWidth(sliderText) - 5, slider1y);
+        text(sliderText + "  " + sliderValue, sliderPosition.x - textWidth(sliderText) - 50, slider1y + 5);
         stroke(#ffffff);
         line(sliderPosition.x, slider1y, sliderPosition.x + sliderSize.x, slider1y);
 

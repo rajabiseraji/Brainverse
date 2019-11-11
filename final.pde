@@ -7,7 +7,7 @@ void setup() {
 	size(700, 700, P3D);
 	background(#525252);
 	toros = new Toros(20, 100, 30);
-	PVector sliderPosition = new PVector(70, height - 50);
+	PVector sliderPosition = new PVector(120, height - 50);
 	slider = new Slider(sliderPosition, 20, "Delta", 20, 20, new PVector(width - 140, 0));
 }
 
