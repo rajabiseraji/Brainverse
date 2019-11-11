@@ -7,6 +7,10 @@ public class Toros {
     private float lastMouseX = 0;
     private float lastMouseY = 0;
     private int deltaValue = 20; // for now between 20 and 100
+    private int startColorValue = #3371a3;
+    private int endColorValue = #a4bad2;
+    private int currentColorValue = startColorValue;
+    private int step = 0x1;
     int k=0;
     int N=50;
     
@@ -14,6 +18,7 @@ public class Toros {
         this.numberOfCircle = numberOfCircle;
         this.bigCircleRadius = bigCircleRadius;
         this.miniCircleRadius = miniCircleRadius;
+        step = (endColorValue - startColorValue) / (numberOfCircle * N / 2);
     }
 
     void setNumberOfCircle(int numberOfCircle) {
@@ -67,14 +72,20 @@ public class Toros {
     }
 
     private void circles(int k) {
+        color currentColor = currentColorValue;
         for (int i=0; i<numberOfCircle; i++) {
+            currentColor = currentColorValue;
             float ang = i*360/numberOfCircle;
             float x = miniCircleRadius*cos(radians(ang+k));
             float y = miniCircleRadius*sin(radians(ang+k));
             strokeWeight(2);
-            if (i%2==0)stroke(#FAB800);
+            if (i%2==0) {
+                currentColorValue += step;
+                stroke(currentColor);
+            }
             else stroke(-1);
             point(x, y);
+            // ellipse(x, y, 2, 2);
         }
     }
 
