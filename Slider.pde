@@ -29,14 +29,16 @@ public class Slider {
     public int drawSlider() {
         ellipseMode(CENTER);
         smooth();
-        fill(0);
+        fill(#ffffff);
         sliderValue = (int)map(s1.x, sliderPosition.x, sliderPosition.x + sliderSize.x , 0, 100);
-        text(sliderText + sliderValue + " ", sliderPosition.x, slider1y - nobSize);
-        stroke(0);
+        text(sliderText + sliderValue + " ", sliderPosition.x - textWidth(sliderText) - 5, slider1y);
+        stroke(#ffffff);
         line(sliderPosition.x, slider1y, sliderPosition.x + sliderSize.x, slider1y);
 
         noStroke();
+        fill(#ffffff, 190);
         ellipse(s1.x, s1.y, nobSize, nobSize);
+        fill(0);
 
         checkHover();
         // vectorLogic();
@@ -75,37 +77,3 @@ public class Slider {
         } 
     }
 }
-
-
-
-// void vectorLogic() {
-//   // relationship
-//   if (s1Over && mousePressed) {
-//     s3.x = (s1.x + s2.x) / 2;
-//   } else if (s2Over && mousePressed) {
-//     s3.x = (s1.x + s2.x) / 2;
-//   } else if (s3Over && mousePressed) {
-//     if(s1.x > s2.x) {
-//       s1.x = (s3.x*2) - s2.x;
-//         if(s1.x >= width-21){
-//           s2.x = (s3.x*2) - s1.x;
-//         }
-//     }
-//     if(s2.x > s1.x) {
-//       s2.x = (s3.x*2) - s1.x;
-//     }
-//     if(s3.x < ((s1.x + s2.x) / 2)){
-//       s2.x = s3.x;
-//       s1.x = s3.x;
-//     }
-//     if(s3.x > ((s1.x + s2.x) / 2)){
-//       s2.x = s3.x;
-//       s1.x = s3.x;
-//     }
-    
-//   }
-
-//   if (s3.x < (s1.x + s2.x) / 2) {
-//     s3.x = (s1.x + s2.x) / 2;
-//   }
-// }
