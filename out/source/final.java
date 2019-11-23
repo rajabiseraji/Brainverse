@@ -55,8 +55,8 @@ public void setup() {
   // backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", !automaticOrManual);
 
 
-  firaSansBook = createFont("FiraSans-Book.otf", 16);
-  firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
+  // firaSansBook = createFont("FiraSans-Book.otf", 16);
+  // firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
 }
 
 public void draw() {
@@ -70,16 +70,17 @@ public void draw() {
   // backButton.display();
 }
 
-/*void mouseDragged() {
+public void mouseDragged() {
   println("I'm dragged");
   slider.mouseDragged();
-}*/
-
-public void mouseMoved() {
-  if(mousePressed && (mouseButton == LEFT)) {
-    slider.mouseDragged();
-  } 
 }
+
+// void mouseMoved() {
+//     println(mousePressed);
+//   if(mousePressed && (mouseButton == LEFT)) {
+//     slider.mouseDragged();
+//   } 
+// }
 
 public void keyPressed(){
     if(key == CODED) { 
