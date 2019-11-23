@@ -14,40 +14,80 @@ import java.io.IOException;
 
 public class Final extends PApplet {
 
-Toros toros;
+Torus torus;
 Slider slider;
 boolean interactionEnabled = false;
 int sliderValue = 20;
 PImage img;
+PFont firaSansBook;
+PFont firaSansExtraBold;
+Button autoButton, manualButton, scannerButton, backButton;
+Boolean automaticOrManual = true;
 
+ 
 public void setup() {
   
-  img = loadImage("bg.png");
+  img = loadImage("NVsmall.png");
   background(img);
   // background(#525252);
-  toros = new Toros(20, 100, 30);
+  torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
   PVector sliderPosition = new PVector(120, height - 50);
-  slider = new Slider(sliderPosition, 20, "Delta", 20, 20, new PVector(width - 140, 0));
+  slider = new Slider(sliderPosition, 20, "Manual", 20, 20, new PVector(width - 140, 0));
+
+  // PVector buttonSize = new PVector(width / 2 - 10, width / 2 - 10);
+  // PVector buttonPosition = new PVector(5, (height - buttonSize.y) / 2);
+  // PVector manualButtonPosition = new PVector(buttonSize.x + 10, buttonPosition.y);
+  // PVector firstButtonImageSize = new PVector(buttonSize.x * 2 / 3, buttonSize.x * 2 / 3);
+  // PVector manualButtonImageSize = new PVector(buttonSize.x * 0.8, buttonSize.y * 0.8);
+  // PVector backButtonImageSize = new PVector(width/15,height/20);
+  // PVector backButtonPosition = new PVector(20, height-40);
+  // PVector scannerButtonImageSize = new PVector(1043/8, 560/8);
+  // PVector scannerButtonPosition = new PVector((width-scannerButtonImageSize.x)/2, (height-scannerButtonImageSize.y)-40);
+  //1043 × 560 scanner
+
+  // PImage museHeadset = loadImage("headset.png", "png");
+  // PImage menuSlider = loadImage("slider.png", "png");
+  // PImage scanner = loadImage("scanner.png", "png");
+  // PImage back = loadImage("back.png", "png");
+  // // autoButton = new Button(buttonSize, buttonPosition, museHeadset, firstButtonImageSize, "Automatic", automaticOrManual);
+  // manualButton = new Button(buttonSize, manualButtonPosition, menuSlider, manualButtonImageSize, "Manual", !automaticOrManual);
+  // scannerButton = new Button(scannerButtonImageSize, scannerButtonPosition, scanner, scannerButtonImageSize, "", !automaticOrManual);
+  // backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", !automaticOrManual);
+
+
+  firaSansBook = createFont("FiraSans-Book.otf", 16);
+  firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
 }
 
 public void draw() {
   background(img);
   sliderValue = slider.drawSlider();
-  toros.setDelta(sliderValue);
-  toros.updateShape(interactionEnabled);
+  torus.setDelta(sliderValue);
+  torus.updateShape(interactionEnabled);
+  // autoButton.display();
+  // manualButton.display();
+  // scannerButton.display();
+  // backButton.display();
 }
 
-public void mouseDragged() {
+/*void mouseDragged() {
+  println("I'm dragged");
   slider.mouseDragged();
+}*/
+
+public void mouseMoved() {
+  if(mousePressed && (mouseButton == LEFT)) {
+    slider.mouseDragged();
+  } 
 }
 
 public void keyPressed(){
     if(key == CODED) { 
         if (keyCode == UP) { 
-            toros.increaseDelta();
+            torus.increaseDelta();
         } 
         else if (keyCode == DOWN) {
-            toros.decreaseDelta();
+            torus.decreaseDelta();
         } 
     } else if(key == 'i') {
     switchInteraction();
@@ -55,151 +95,112 @@ public void keyPressed(){
 
 }
 
+// void mouseClicked(MouseEvent event) {
+//   autoButton.mouseClickHandler(event);
+// }
+
 public void switchInteraction() {
   if(interactionEnabled)
     interactionEnabled = false;
   else 
     interactionEnabled = true;
 }
-public class BrainAtom {
-    private float mass = 0;
-    private float currentSpeed = 0;
-    private float maxSpeed = 0;
-    private PVector center;
-    private float distanceToCentre = 0;
-    private int atomColor = "ffffff";
+public class Button {
 
-    public BrainAtom (float mass, float currentSpeed, float maxSpeed, PVector center, float distanceToCentre) {
-        this.mass = mass;
-        this.currentSpeed = currentSpeed;
-        this.maxSpeed = maxSpeed;
-        this.center = center;
-        this.distanceToCentre = distanceToCentre;
-        this.atomColor = atomColor;
-    }
+    // enum Type {
+    //     IMAGE,
+    //     TEXT
+    // }
 
-    // setters
-    public void setMass(float mass) {
-        this.mass = mass;
-    }
-    public void setCurrentSpeed(float currentSpeed) {
-        this.currentSpeed = currentSpeed;
-    }
-    public void setMaxSpeed(float maxSpeed) {
-        this.maxSpeed = maxSpeed;
-    }
-    public void setCenter(PVector center) {
-        this.center = center;
-    }
-    public void setDistanceToCentre(float distanceToCentre) {
-        this.distanceToCentre = distanceToCentre;
-    }
+    PVector position;
+    PVector size;
+    PVector buttonImageSize;
+    PImage buttonImage;
+    boolean active = false;
+    String buttonText;
 
-    // getters
-    public float getmass() {
-        return this.mass;
-    }
-    public float getcurrentSpeed() {
-        return this.currentSpeed;
-    }
-    public float getmaxSpeed() {
-        return this.maxSpeed;
-    }
-    public PVector getcenter() {
-        return this.center;
-    }
-    public float getdistanceToCentre() {
-        return this.distanceToCentre;
-    }
+    PShape buttonShape;
 
+    private PFont firaSansBook;
+    private PFont firaSansExtraBold;
+    private PFont currentFont;
+    
+    public Button (PVector size, PVector position, PImage buttonImage, PVector buttonImageSize, String buttonText, boolean active) { // image button 
+        this.size = size;
+        this.position = position;
+        this.active = active;
+        this.buttonImageSize = buttonImageSize;
 
-
-
-
-
-}
-interface Displayable {
-    public PShape getShape();
-    public void setShape(PShape newShape);
-}
-// import java.lang.Math;
-
-// float mass = [];
-// var positionX = [];
-// var positionY = [];
-// var velocityX = [];
-// var velocityY = [];
-
-// /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// void setup() {
-// 	size(width, height);
-// 	noStroke();
-// 	fill(64, 255, 255, 192);
-// }
-
-// /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// void draw() {
-// 	background(32);
-	
-// 	for (int particleA = 0; particleA < mass.length; particleA++) {
-// 		float accelerationX = 0, accelerationY = 0;
-		
-// 		for (int particleB = 0; particleB < mass.length; particleB++) {
-// 			if (particleA != particleB) {
-// 				float distanceX = positionX[particleB] - positionX[particleA];
-// 				float distanceY = positionY[particleB] - positionY[particleA];
-
-// 				float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
-// 				if (distance < 1) distance = 1;
-
-// 				float force = (distance - 320) * mass[particleB] / distance;
-// 				accelerationX += force * distanceX;
-// 				accelerationY += force * distanceY;
-// 			}
-// 		}
-		
-// 		velocityX[particleA] = velocityX[particleA] * 0.99 + accelerationX * mass[particleA];
-// 		velocityY[particleA] = velocityY[particleA] * 0.99 + accelerationY * mass[particleA];
-// 	}
-	
-// 	for (int particle = 0; particle < mass.length; particle++) {
-// 		positionX[particle] += velocityX[particle];
-// 		positionY[particle] += velocityY[particle];
-		
-// 		ellipse(positionX[particle], positionY[particle], mass[particle] * 1000, mass[particle] * 1000);
-// 	}
-// }
-
-// /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// void addNewParticle() {
-// 	mass.push(random(0.003, 0.03));
-// 	positionX.push(mouseX);
-// 	positionY.push(mouseY);
-// 	velocityX.push(0);
-// 	velocityY.push(0);
-// }
-
-// /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// function mouseClicked() {
-// 	addNewParticle();
-// }
-
-// /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// function mouseDragged() {
-// 	addNewParticle();
-// }
-// public class ShapeManager {
-
-//     public ShapeManager (arguments) {
+        this.firaSansBook = createFont("FiraSans-Book.otf", 15);
+        this.firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 15);
+        this.currentFont = firaSansBook;
         
-//     }
+        textFont(this.currentFont);
+        textAlign(CENTER, CENTER);
 
-// }
+        if(buttonImage != null)
+            this.buttonImage = buttonImage;
+
+        this.buttonText = buttonText;
+        buttonShape = createShape(GROUP);
+    }
+
+    public void toggleButton() {
+        this.active = !this.active;
+        if(this.active)
+            this.currentFont = firaSansExtraBold;
+        else
+            this.currentFont = firaSansBook;
+    }
+
+    public void display() {
+        textFont(this.currentFont);
+        stroke(255, 255, 255, 0);
+        fill(255, 255, 255, 0);
+        rect(position.x, position.y, size.x, size.y);
+        // mouseClickHandler();
+        if (this.active)
+            drawBorder();
+
+        displayImage();
+        displayText();
+    }
+
+    private void displayText() {
+        fill(255, 255, 255); //text coloring
+        text(this.buttonText, this.position.x + this.size.x / 2, this.position.y + this.size.y - 20);
+    }
+
+    private void displayImage() {
+        if(this.buttonImage != null)
+            image(this.buttonImage, position.x + (size.x - buttonImageSize.x)/2, position.y + (size.y - buttonImageSize.y)/2, this.buttonImageSize.x, this.buttonImageSize.y);
+    }
+
+    private void drawBorder() {
+        stroke(255, 255, 255);
+        strokeWeight(2);
+        line(this.position.x, this.position.y + this.size.y, this.position.x + this.size.x, this.position.y + this.size.y);
+    }
+
+    public void mouseClickHandler(MouseEvent event) {
+        // if(mousePressed) {
+            if(event.getX() >= position.x && event.getX() < position.x + size.x) {
+                if(event.getY() >= position.y && event.getY() < position.y + size.y) {
+                    toggleButton();
+                    // delay(100);
+                }
+            }
+        // }
+    }
+
+    public PShape getShape(){
+        return buttonShape;
+    }
+    
+    public void updateShape(PShape newpattern){
+    }
+
+}
 
 
 public class Slider {
@@ -281,7 +282,7 @@ public class Slider {
 }
 
 
-public class Toros {
+public class Torus {
     private int numberOfCircle = 20;
     private float bigCircleRadius = 100;
     private float miniCircleRadius = 30;
@@ -295,7 +296,7 @@ public class Toros {
     int k=0;
     int N=50;
     
-    public Toros (int numberOfCircle, float bigCircleRadius, float miniCircleRadius) {
+    public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius) {
         this.numberOfCircle = numberOfCircle;
         this.bigCircleRadius = bigCircleRadius;
         this.miniCircleRadius = miniCircleRadius;
@@ -398,13 +399,12 @@ public class Toros {
     public void setDelta(int newDeltaValue) {
         this.deltaValue = newDeltaValue;
         numberOfCircle = (int)map(newDeltaValue, 0, 100, 5, 99); // 0 -> 20 ... 1 up -> 1 up
-        bigCircleRadius = map(newDeltaValue, 0, 100, 11, 299);
+        bigCircleRadius = map(newDeltaValue, 0, 100, 11, 180);
         miniCircleRadius = map(newDeltaValue, 0, 100, 100, 5); 
         N = (int)map(newDeltaValue, 0, 100, 30, 300);
     }
 }
-
-  public void settings() {  size(768, 1024, P3D); }
+  public void settings() {  size(384, 512, P3D); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "Final" };
     if (passedArgs != null) {

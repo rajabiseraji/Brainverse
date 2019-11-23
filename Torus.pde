@@ -1,6 +1,6 @@
 
 
-public class Toros {
+public class Torus {
     private int numberOfCircle = 20;
     private float bigCircleRadius = 100;
     private float miniCircleRadius = 30;
@@ -14,7 +14,7 @@ public class Toros {
     int k=0;
     int N=50;
     
-    public Toros (int numberOfCircle, float bigCircleRadius, float miniCircleRadius) {
+    public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius) {
         this.numberOfCircle = numberOfCircle;
         this.bigCircleRadius = bigCircleRadius;
         this.miniCircleRadius = miniCircleRadius;
@@ -117,9 +117,8 @@ public class Toros {
     public void setDelta(int newDeltaValue) {
         this.deltaValue = newDeltaValue;
         numberOfCircle = (int)map(newDeltaValue, 0, 100, 5, 99); // 0 -> 20 ... 1 up -> 1 up
-        bigCircleRadius = map(newDeltaValue, 0, 100, 11, 299);
+        bigCircleRadius = map(newDeltaValue, 0, 100, 11, 180);
         miniCircleRadius = map(newDeltaValue, 0, 100, 100, 5); 
         N = (int)map(newDeltaValue, 0, 100, 30, 300);
     }
 }
-
