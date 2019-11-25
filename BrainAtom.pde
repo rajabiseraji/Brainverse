@@ -3,6 +3,7 @@ public class BrainAtom {
     private float currentSpeed = 0;
     private float maxSpeed = 0;
     private PVector center;
+    private PVector position;
     private float distanceToCentre = 0;
     private color atomColor = "ffffff";
 
@@ -13,6 +14,10 @@ public class BrainAtom {
         this.center = center;
         this.distanceToCentre = distanceToCentre;
         this.atomColor = atomColor;
+    }
+
+    public BrainAtom(PVector position) {
+        this.position = position;
     }
 
     // setters
@@ -31,10 +36,16 @@ public class BrainAtom {
     public void setDistanceToCentre(float distanceToCentre) {
         this.distanceToCentre = distanceToCentre;
     }
+    public void setPosition(float position) {
+        this.position = position;
+    }
 
     // getters
     public float getmass() {
         return this.mass;
+    }
+    public float getPosition() {
+        return this.position;
     }
     public float getcurrentSpeed() {
         return this.currentSpeed;
@@ -50,7 +61,10 @@ public class BrainAtom {
     }
 
 
-
+    void display() {
+        // it's temporary
+        point(this.position.x, this.position.y);
+    }
 
 
 
