@@ -12,7 +12,8 @@ public class Torus {
     private int currentColorValue = startColorValue;
     private int step = 0x1;
     int k=0;
-    int N=50;
+    int N=20; // is the number of points in the big circle's circumference 
+    // if the N is high it means the number of mini circles are higher!
     
     public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius) {
         this.numberOfCircle = numberOfCircle;
@@ -53,6 +54,7 @@ public class Torus {
         rotateX(radians(-yy));
         rotateY(radians(-xx));
         noFill(); 
+        // each loop of this for creates one of the miniCircles!
         for (int i=0; i<N; i++) { 
             float ang1 =i*TWO_PI/N;
             // This part draws a circle with R = 100 and N points in its circumference 
@@ -119,6 +121,6 @@ public class Torus {
         numberOfCircle = (int)map(newDeltaValue, 0, 100, 5, 99); // 0 -> 20 ... 1 up -> 1 up
         bigCircleRadius = map(newDeltaValue, 0, 100, 11, 180);
         miniCircleRadius = map(newDeltaValue, 0, 100, 100, 5); 
-        N = (int)map(newDeltaValue, 0, 100, 30, 300);
+        N = (int)map(newDeltaValue, 0, 100, 5, 100); // 30, 100
     }
 }

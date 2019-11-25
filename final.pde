@@ -55,7 +55,7 @@ void draw() {
 }
 
 void mouseDragged() {
-  println("I'm dragged");
+  // println("I'm dragged");
   slider.mouseDragged();
 }
 

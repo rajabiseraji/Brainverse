@@ -71,7 +71,7 @@ public void draw() {
 }
 
 public void mouseDragged() {
-  println("I'm dragged");
+  // println("I'm dragged");
   slider.mouseDragged();
 }
 
@@ -295,7 +295,7 @@ public class Torus {
     private int currentColorValue = startColorValue;
     private int step = 0x1;
     int k=0;
-    int N=50;
+    int N=20;
     
     public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius) {
         this.numberOfCircle = numberOfCircle;
@@ -402,7 +402,7 @@ public class Torus {
         numberOfCircle = (int)map(newDeltaValue, 0, 100, 5, 99); // 0 -> 20 ... 1 up -> 1 up
         bigCircleRadius = map(newDeltaValue, 0, 100, 11, 180);
         miniCircleRadius = map(newDeltaValue, 0, 100, 100, 5); 
-        N = (int)map(newDeltaValue, 0, 100, 30, 300);
+        N = (int)map(newDeltaValue, 0, 100, 5, 100); // 30, 100
     }
 }
   public void settings() {  size(384, 512, P3D); }
