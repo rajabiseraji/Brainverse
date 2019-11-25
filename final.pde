@@ -8,6 +8,8 @@ PFont firaSansExtraBold;
 Button autoButton, manualButton, scannerButton, backButton;
 Boolean automaticOrManual = true;
 
+Moon moon;
+
  
 void setup() {
   size(384, 512, P3D);
@@ -17,6 +19,8 @@ void setup() {
   torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
   PVector sliderPosition = new PVector(120, height - 50);
   slider = new Slider(sliderPosition, 20, "Manual", 20, 20, new PVector(width - 140, 0));
+
+  moon = new Moon(180 , 170, 10, 0.02, 300);
 
   // PVector buttonSize = new PVector(width / 2 - 10, width / 2 - 10);
   // PVector buttonPosition = new PVector(5, (height - buttonSize.y) / 2);
@@ -49,8 +53,8 @@ void draw() {
   // torus.setDelta(sliderValue);
   // torus.updateShape(interactionEnabled);
   // Torus
-  
 
+  moon.updateShape();
 
   // Moon
 

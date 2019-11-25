@@ -24,6 +24,8 @@ PFont firaSansExtraBold;
 Button autoButton, manualButton, scannerButton, backButton;
 Boolean automaticOrManual = true;
 
+Moon moon;
+
  
 public void setup() {
   
@@ -33,6 +35,8 @@ public void setup() {
   torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
   PVector sliderPosition = new PVector(120, height - 50);
   slider = new Slider(sliderPosition, 20, "Manual", 20, 20, new PVector(width - 140, 0));
+
+  moon = new Moon(180 , 170, 10, 0.02f, 300);
 
   // PVector buttonSize = new PVector(width / 2 - 10, width / 2 - 10);
   // PVector buttonPosition = new PVector(5, (height - buttonSize.y) / 2);
@@ -61,9 +65,16 @@ public void setup() {
 
 public void draw() {
   background(img);
-  sliderValue = slider.drawSlider();
-  torus.setDelta(sliderValue);
-  torus.updateShape(interactionEnabled);
+  // sliderValue = slider.drawSlider();
+  // torus.setDelta(sliderValue);
+  // torus.updateShape(interactionEnabled);
+  // Torus
+
+  moon.updateShape();
+
+  // Moon
+
+
   // autoButton.display();
   // manualButton.display();
   // scannerButton.display();
@@ -105,6 +116,77 @@ public void switchInteraction() {
     interactionEnabled = false;
   else 
     interactionEnabled = true;
+}
+public class BrainAtom {
+    private float mass = 0;
+    private float currentSpeed = 0;
+    private float maxSpeed = 0;
+    private PVector center;
+    private PVector position;
+    private float distanceToCentre = 0;
+    private int atomColor = 0xffffff;
+
+    public BrainAtom (float mass, float currentSpeed, float maxSpeed, PVector center, float distanceToCentre) {
+        this.mass = mass;
+        this.currentSpeed = currentSpeed;
+        this.maxSpeed = maxSpeed;
+        this.center = center;
+        this.distanceToCentre = distanceToCentre;
+        this.atomColor = atomColor;
+    }
+
+    public BrainAtom(PVector position) {
+        this.position = position;
+    }
+
+    // setters
+    public void setMass(float mass) {
+        this.mass = mass;
+    }
+    public void setCurrentSpeed(float currentSpeed) {
+        this.currentSpeed = currentSpeed;
+    }
+    public void setMaxSpeed(float maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+    public void setCenter(PVector center) {
+        this.center = center;
+    }
+    public void setDistanceToCentre(float distanceToCentre) {
+        this.distanceToCentre = distanceToCentre;
+    }
+    public void setPosition(PVector position) {
+        this.position = position;
+    }
+
+    // getters
+    public float getmass() {
+        return this.mass;
+    }
+    public PVector getPosition() {
+        return this.position;
+    }
+    public float getcurrentSpeed() {
+        return this.currentSpeed;
+    }
+    public float getmaxSpeed() {
+        return this.maxSpeed;
+    }
+    public PVector getcenter() {
+        return this.center;
+    }
+    public float getdistanceToCentre() {
+        return this.distanceToCentre;
+    }
+
+
+    public void display() {
+        // it's temporary
+        point(this.position.x, this.position.y);
+    }
+
+
+
 }
 public class Button {
 
@@ -204,6 +286,112 @@ public class Button {
 }
 
 
+public class Moon {
+    public int circleDivisions = 18;
+    public float outerCircleRadius = 180; /// the max outer circle radius of the torus
+    public float innerCircleRadius = 170;
+    public int tethaValue = 20; // again for now between 20 and 100
+    public int startColorValue = 0xff3371a3;
+    public int endColorValue = 0xffa4bad2;
+    public int currentColorValue = startColorValue;
+    public int step = 0x1;
+    public float palinNoiseScale = 0.002f;
+    public float palinNoiceValue = 0;
+    int p = 0;
+    
+    public Moon () {
+        /**
+        TODO: other inits necessary
+        */
+        // step = (endColorValue - startColorValue) / (numberOfCircle * N / 2);
+    }
+
+    public Moon(float outerCircleRadius,float innerCircleRadius,int tethaValue,float palinNoiseScale, int circleDivisions) {
+        this.outerCircleRadius = outerCircleRadius;
+        this.innerCircleRadius = innerCircleRadius;
+        this.tethaValue = tethaValue;
+        this.palinNoiseScale = palinNoiseScale;
+        this.circleDivisions = circleDivisions;
+
+    }
+
+    public void updateShape() {
+        // create the outer circle with points
+        pushMatrix();
+        translate(width/2, height/2);
+        drawOuterCircle(p);
+        drawInnerCircle(p);
+        popMatrix();
+        p++;
+        // create the inner circle with points
+        // animate the points so that they move a little bit up and down to and from the center of the circle
+    }
+
+    public void drawOuterCircle(int p) {
+        int k = 0;
+        while(k < circleDivisions) {
+            float noiseValue = noise(p * k * palinNoiseScale, p * k * palinNoiseScale);
+            float step = (noiseValue - 0.5f) * 10;
+            float angle = TWO_PI * k / circleDivisions;
+            float x = (outerCircleRadius + step) * cos(angle);
+            float y = (outerCircleRadius + step) * sin(angle);
+            fill(0xffffffff, noiseValue * 255);
+            stroke(0xffffffff, 0);
+            ellipse(x, y, 2, 2);
+            k++;
+        }
+    }
+
+    public void drawInnerCircle(int p) {
+        int k = 0;
+        while(k < circleDivisions) {
+            float noiseValue = noise(p * k * palinNoiseScale, p * k * palinNoiseScale);
+            float step = (noiseValue - 0.5f) * 10;
+            float angle = TWO_PI * k / circleDivisions;
+            float x = (innerCircleRadius + step) * cos(angle);
+            float y = (innerCircleRadius + step) * sin(angle);
+            fill(0xffffffff, noiseValue * 255);
+            stroke(0xffffffff, 0);
+            ellipse(x, y, 2, 2);
+            k++;
+        }
+    }
+
+    // public void increaseDelta() {
+    //     // increasing delta would increase the number of circles and increasing 
+    //     // the bigCircleRadius and decrease smallCircleRadius and also increase N!
+    //     if(numberOfCircle < 100)
+    //         numberOfCircle++;
+    //     if(bigCircleRadius < 300)
+    //         bigCircleRadius+=3;
+    //     if(miniCircleRadius > 5)
+    //         miniCircleRadius--;
+    //     if(N < 300)
+    //         N+=10;
+    // }
+
+    // public void decreaseDelta() {
+    //     // so basically do the opposite of what you do in the increase
+    //     if(numberOfCircle > 4)
+    //         numberOfCircle--;
+    //     if(bigCircleRadius > 10)
+    //         bigCircleRadius-=3;
+    //     if(miniCircleRadius < 100)
+    //         miniCircleRadius++;
+    //     if(N > 30)
+    //         N-=10;
+    // }
+
+    // public void setDelta(int newDeltaValue) {
+    //     this.deltaValue = newDeltaValue;
+    //     numberOfCircle = (int)map(newDeltaValue, 0, 100, 5, 99); // 0 -> 20 ... 1 up -> 1 up
+    //     bigCircleRadius = map(newDeltaValue, 0, 100, 11, 180);
+    //     miniCircleRadius = map(newDeltaValue, 0, 100, 100, 5); 
+    //     N = (int)map(newDeltaValue, 0, 100, 5, 100); // 30, 100
+    // }
+}
+
+
 public class Slider {
     PVector s1; // change to - nob position
     PVector sliderPosition;
@@ -295,7 +483,8 @@ public class Torus {
     private int currentColorValue = startColorValue;
     private int step = 0x1;
     int k=0;
-    int N=20;
+    int N=20; // is the number of points in the big circle's circumference 
+    // if the N is high it means the number of mini circles are higher!
     
     public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius) {
         this.numberOfCircle = numberOfCircle;
@@ -336,6 +525,7 @@ public class Torus {
         rotateX(radians(-yy));
         rotateY(radians(-xx));
         noFill(); 
+        // each loop of this for creates one of the miniCircles!
         for (int i=0; i<N; i++) { 
             float ang1 =i*TWO_PI/N;
             // This part draws a circle with R = 100 and N points in its circumference 

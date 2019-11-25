@@ -9,8 +9,9 @@ public class Moon {
     public int endColorValue = #a4bad2;
     public int currentColorValue = startColorValue;
     public int step = 0x1;
-    public float palinNoiseScale = 0.02;
+    public float palinNoiseScale = 0.002;
     public float palinNoiceValue = 0;
+    int p = 0;
     
     public Moon () {
         /**
@@ -30,24 +31,44 @@ public class Moon {
 
     void updateShape() {
         // create the outer circle with points
-        
+        pushMatrix();
+        translate(width/2, height/2);
+        drawOuterCircle(p);
+        drawInnerCircle(p);
+        popMatrix();
+        p++;
         // create the inner circle with points
         // animate the points so that they move a little bit up and down to and from the center of the circle
     }
 
-    void drawOuterCircle() {
+    void drawOuterCircle(int p) {
         int k = 0;
         while(k < circleDivisions) {
+            float noiseValue = noise(p * k * palinNoiseScale, p * k * palinNoiseScale);
+            float step = (noiseValue - 0.5) * 10;
             float angle = TWO_PI * k / circleDivisions;
-            float x = outerCircleRadius * cos(angle);
-            float y = outerCircleRadius * sin(angle);
-            float noiseValue = noise(k * palinNoiseScale, k * palinNoiseScale);
-            ellipse(x * noiseValue, y * noiseValue, noiseValue * 3 , noiseValue * 3);
+            float x = (outerCircleRadius + step) * cos(angle);
+            float y = (outerCircleRadius + step) * sin(angle);
+            fill(#ffffff, noiseValue * 255);
+            stroke(#ffffff, 0);
+            ellipse(x, y, 2, 2);
+            k++;
         }
     }
 
-    void drawInnerCircle() {
-
+    void drawInnerCircle(int p) {
+        int k = 0;
+        while(k < circleDivisions) {
+            float noiseValue = noise(p * k * palinNoiseScale, p * k * palinNoiseScale);
+            float step = (noiseValue - 0.5) * 10;
+            float angle = TWO_PI * k / circleDivisions;
+            float x = (innerCircleRadius + step) * cos(angle);
+            float y = (innerCircleRadius + step) * sin(angle);
+            fill(#ffffff, noiseValue * 255);
+            stroke(#ffffff, 0);
+            ellipse(x, y, 2, 2);
+            k++;
+        }
     }
 
     // public void increaseDelta() {
