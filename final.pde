@@ -45,9 +45,16 @@ void setup() {
 
 void draw() {
   background(img);
-  sliderValue = slider.drawSlider();
-  torus.setDelta(sliderValue);
-  torus.updateShape(interactionEnabled);
+  // sliderValue = slider.drawSlider();
+  // torus.setDelta(sliderValue);
+  // torus.updateShape(interactionEnabled);
+  // Torus
+  
+
+
+  // Moon
+
+
   // autoButton.display();
   // manualButton.display();
   // scannerButton.display();
