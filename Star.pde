@@ -1,6 +1,4 @@
-
-
-public class Ocean {
+public class Star {
     public int xyzSteps = 18;
     public float sphereRadius = 180; /// the max outer circle radius of the torus
     public int gammaValue = 20; // again for now between 20 and 100
@@ -16,14 +14,14 @@ public class Ocean {
     PShape my_sphere;
     ArrayList<PVector> vertices = new ArrayList<PVector>();
     
-    public Ocean () {
+    public Star () {
         /**
         TODO: other inits necessary
         */
         // step = (endColorValue - startColorValue) / (numberOfCircle * N / 2);
     }
 
-    public Ocean(int gammaValue,float palinNoiseScale, int xyzSteps, float sphereRadius) {
+    public Star(int gammaValue,float palinNoiseScale, int xyzSteps, float sphereRadius) {
         this.palinNoiseScale = palinNoiseScale;
         this.gammaValue = gammaValue;
         this.palinNoiseScale = palinNoiseScale;
@@ -58,6 +56,21 @@ public class Ocean {
             ellipse(0, 0, 4, 4);
             popMatrix();
         }
+    }
+
+    void drawStar(float x, float y, float radius1, float radius2, int npoints) {
+        float angle = TWO_PI / npoints;
+        float halfAngle = angle/2.0;
+        beginShape();
+        for (float a = 0; a < TWO_PI; a += angle) {
+            float sx = x + cos(a) * radius2;
+            float sy = y + sin(a) * radius2;
+            vertex(sx, sy);
+            sx = x + cos(a+halfAngle) * radius1;
+            sy = y + sin(a+halfAngle) * radius1;
+            vertex(sx, sy);
+        }
+        endShape(CLOSE);
     }
     
     void getVertices(PShape shape, ArrayList<PVector> vertices){

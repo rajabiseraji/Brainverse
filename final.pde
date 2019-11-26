@@ -7,14 +7,17 @@ PFont firaSansBook;
 PFont firaSansExtraBold;
 Button autoButton, manualButton, scannerButton, backButton;
 Boolean automaticOrManual = true;
+int currentScreen = 0; // 0 title screen, 1 choose auto/manual, 2 main app screen manual, 3 main app screen auto
 
 Moon moon;
 Ocean ocean;
 
+Vector<AppScreen> appScreens = new Vector<AppScreen>();
+
  
 void setup() {
-  size(384, 512, P3D);
-  img = loadImage("NVsmall.png");
+  size(768, 1024, P3D);
+  img = loadImage("bg.png");
   background(img);
   // background(#525252);
   torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
@@ -47,11 +50,17 @@ void setup() {
 
   // firaSansBook = createFont("FiraSans-Book.otf", 16);
   // firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
+  TitleScreen t = new TitleScreen();
+  appScreens.add(t);
 }
 
 void draw() {
   background(img);
-  sliderValue = slider.drawSlider();
+
+  // screen management
+  appScreens.get(currentScreen).display();
+
+  // sliderValue = slider.drawSlider();
   // torus.setDelta(sliderValue);
   // torus.updateShape(interactionEnabled);
   // Torus
@@ -62,8 +71,8 @@ void draw() {
   // Moon
 
   // Ocean
-  ocean.setGamma(sliderValue);
-  ocean.updateShape();
+  // ocean.setGamma(sliderValue);
+  // ocean.updateShape();
 
   // autoButton.display();
   // manualButton.display();
@@ -96,6 +105,11 @@ void keyPressed(){
   }
 
 }
+
+void changeScreen(int newScreenNumber) {
+  currentScreen = newScreenNumber;
+}
+
 
 // void mouseClicked(MouseEvent event) {
 //   autoButton.mouseClickHandler(event);
