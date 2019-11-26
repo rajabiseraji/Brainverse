@@ -10,7 +10,9 @@ PFont firaSansBook;
 PFont firaSansExtraBold;
 Button autoButton, manualButton, scannerButton, backButton;
 Boolean automaticOrManual = true;
+
 int currentScreen = 0; // 0 title screen, 1 choose auto/manual, 2 main app screen manual, 3 main app screen auto
+int elapsedTime = 0; 
 
 Moon moon;
 Ocean ocean;
@@ -50,8 +52,10 @@ void setup() {
 
   // firaSansBook = createFont("FiraSans-Book.otf", 16);
   // firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
-  TitleScreen t = new TitleScreen();
-  appScreens.add(t);
+  TitleScreen titleScreen = new TitleScreen();
+  ChooseScreen chooseScreen = new ChooseScreen();
+  appScreens.add(titleScreen);
+  appScreens.add(chooseScreen);
 }
 
 void draw() {
@@ -78,6 +82,14 @@ void draw() {
   // manualButton.display();
   // scannerButton.display();
   // backButton.display();
+}
+
+void screenManager() {
+  if(currentScreen == 0) {
+    elapsedTime = millis();
+    if(elapsedTime > 2000)
+      currentScreen++;
+  }
 }
 
 void mouseDragged() {
