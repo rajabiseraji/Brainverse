@@ -9,6 +9,7 @@ Button autoButton, manualButton, scannerButton, backButton;
 Boolean automaticOrManual = true;
 
 Moon moon;
+Ocean ocean;
 
  
 void setup() {
@@ -21,6 +22,7 @@ void setup() {
   slider = new Slider(sliderPosition, 20, "Manual", 20, 20, new PVector(width - 140, 0));
 
   moon = new Moon(180 , 170, 10, 0.02, 300);
+  ocean = new Ocean(20, 0.002, 100, 150);
 
   // PVector buttonSize = new PVector(width / 2 - 10, width / 2 - 10);
   // PVector buttonPosition = new PVector(5, (height - buttonSize.y) / 2);
@@ -53,11 +55,15 @@ void draw() {
   // torus.setDelta(sliderValue);
   // torus.updateShape(interactionEnabled);
   // Torus
-  moon.setTetha(sliderValue);
-  moon.updateShape();
-
+  
+  // moon.setTetha(sliderValue);
+  // moon.updateShape();
+  
   // Moon
 
+  // Ocean
+  ocean.setGamma(sliderValue);
+  ocean.updateShape();
 
   // autoButton.display();
   // manualButton.display();
