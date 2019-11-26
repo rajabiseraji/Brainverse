@@ -20,14 +20,6 @@ public class Final extends PApplet {
 
 
 
-Torus torus;
-Moon moon;
-Ocean ocean;
-
-
-Slider slider;
-boolean interactionEnabled = false;
-int sliderValue = 20;
 PImage img;
 PFont firaSansBook;
 PFont firaSansExtraBold;
@@ -40,15 +32,7 @@ public void setup() {
   img = loadImage("bg.png");
   background(img);
   // background(#525252);
-  torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
-  PVector sliderPosition = new PVector(120, height - 50);
-  slider = new Slider(sliderPosition, 20, "Manual", 20, 20, new PVector(width - 140, 0));
 
-  moon = new Moon(180 , 170, 10, 0.02f, 300);
-  ocean = new Ocean(20, 0.002f, 100, 150);
-
-  // firaSansBook = createFont("FiraSans-Book.otf", 16);
-  // firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
   TitleScreen titleScreen = new TitleScreen();
   ChooseScreen chooseScreen = new ChooseScreen();
   ManualScreen manualScreen = new ManualScreen();
@@ -64,21 +48,6 @@ public void draw() {
   // screen management
   screenManager();
   appScreens.get(currentScreen).display();
-
-  // sliderValue = slider.drawSlider();
-  // torus.setDelta(sliderValue);
-  // torus.updateShape(interactionEnabled);
-  // Torus
-  
-  // moon.setTetha(sliderValue);
-  // moon.updateShape();
-  
-  // Moon
-
-  // Ocean
-  // ocean.setGamma(sliderValue);
-  // ocean.updateShape();
-
 }
 
 public void screenManager() {
@@ -405,7 +374,11 @@ public class Flower {
 
     public void display(float transparency) {
         this.transparency = transparency;
+        pushMatrix();
+        translate(position.x, position.y);
+        rotate(radians(millis() * rotationSpeedDegPerSec/100));
         drawFlowers(p);
+        popMatrix();
         p++;
     }
 
@@ -423,7 +396,7 @@ public class Flower {
         noFill();
         stroke(0xffffffff, transparency * 255);
         pushMatrix();
-            translate(position.x, position.y);
+            // translate(position.x, position.y);
             float angle = TWO_PI / npoints;
             float halfAngle = angle/2.0f;
             beginShape();
@@ -438,7 +411,7 @@ public class Flower {
                 curveVertex(sx, sy);
             }
             //curveVertex(x + cos(a+halfAngle) * radius1, y + sin(a+halfAngle) * radius1);
-            endShape(CLOSE);
+            endShape();
         popMatrix();
     }
 
@@ -479,7 +452,7 @@ public class ManualScreen extends AppScreen{
 
     public ManualScreen () {
         PVector backButtonImageSize = new PVector(width/15,height/20);
-        PVector backButtonPosition = new PVector(20, height-40);
+        PVector backButtonPosition = new PVector(80, height-80);
         PImage back = loadImage("back.png", "png");
         backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", false);
 
@@ -489,32 +462,24 @@ public class ManualScreen extends AppScreen{
         waves.add(tethaWave);
         waves.add(deltaWave);
 
-        PVector alphaSliderPosition = new PVector(120, (height * 3 / 4));
-        alphaSlider = new Slider(alphaSliderPosition, 20, "Alpha", 20, 100, new PVector(width - 140, 0));
-        PVector betaSliderPosition = new PVector(120, (height * 3 / 4) + 50);
-        betaSlider = new Slider(betaSliderPosition, 20, "Beta", 20, 100, new PVector(width - 140, 0));
-        PVector gammaSliderPosition = new PVector(120, (height * 3 / 4) + 100);
-        gammaSlider = new Slider(gammaSliderPosition, 20, "Gamma", 20, 100, new PVector(width - 140, 0));
-        PVector tethaSliderPosition = new PVector(120, (height * 3 / 4) + 150);
-        tethaSlider = new Slider(tethaSliderPosition, 20, "Tetha", 20, 100, new PVector(width - 140, 0));
-        PVector deltaSliderPosition = new PVector(120, (height * 3 / 4) + 200);
-        deltaSlider = new Slider(deltaSliderPosition, 20, "Delta", 20, 100, new PVector(width - 140, 0));
+        PVector alphaSliderPosition = new PVector(120, (height * 3 / 4) - 50);
+        alphaSlider = new Slider(alphaSliderPosition, 20, "Alpha", 20, 100, new PVector(width - 160, 0));
+        PVector betaSliderPosition = new PVector(120, (height * 3 / 4) );
+        betaSlider = new Slider(betaSliderPosition, 20, "Beta", 20, 100, new PVector(width - 160, 0));
+        PVector gammaSliderPosition = new PVector(120, (height * 3 / 4) + 50);
+        gammaSlider = new Slider(gammaSliderPosition, 20, "Gamma", 20, 100, new PVector(width - 160, 0));
+        PVector tethaSliderPosition = new PVector(120, (height * 3 / 4) + 100);
+        tethaSlider = new Slider(tethaSliderPosition, 20, "Tetha", 20, 100, new PVector(width - 160, 0));
+        PVector deltaSliderPosition = new PVector(120, (height * 3 / 4) + 150);
+        deltaSlider = new Slider(deltaSliderPosition, 20, "Delta", 20, 100, new PVector(width - 160, 0));
         
-        torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
-        moon = new Moon(180 , 170, 10, 0.02f, 300);
-        ocean = new Ocean(20, 0.002f, 100, 150);
-        star = new Star(new PVector(width / 2, 300), 180, 15, 10, 4, 10);
+        torus = new Torus(5, 25, 10, new PVector(width /2 , 250)); // 20, 100, 30 are standard
+        moon = new Moon(180 , 170, 10, 0.02f, 300, new PVector(width /2 , 250));
+        ocean = new Ocean(20, 0.002f, 100, 150, new PVector(width /2 , 250));
+        star = new Star(new PVector(width / 2, 400), 180, 15, 10, 4, 10);
         // PVector position, float edgeLength, int angleDivision, int numberOfEdgePoints, float pointSize,  int shapeRepetitionNumber
-        flower = new Flower(new PVector(width /2, 300), 170, 5, 0.5f, 10, 7, 3);
+        flower = new Flower(new PVector(width /2, 250), 170, 5, 0.5f, 10, 7, 3);
         // Flower (PVector position, float radius, int numberOfFlowers, float rotationSpeedDegPerSec, float radiusOffest, int numberOfStarPoints, int numberOfStarPointsOffset) 
-        // for now we have Delta -> Torus, Tetha -> moon, Gamma -> ocean
-
-
-        /////////////////////////////////////////////////////
-
-        // IDEA OF FACDING AND HAVING SLIDER VALUES MONITORED FOR FADING INSTEAD OF MORPHING FOR NOW
-
-        ////////////////////////////////////////////////////
     }
 
     public void display() {
@@ -606,6 +571,7 @@ public class ManualScreen extends AppScreen{
 
 
 public class Moon {
+    PVector position;
     public int circleDivisions = 18;
     public float outerCircleRadius = 180; /// the max outer circle radius of the torus
     public float innerCircleRadius = 170;
@@ -627,12 +593,13 @@ public class Moon {
         // step = (endColorValue - startColorValue) / (numberOfCircle * N / 2);
     }
 
-    public Moon(float outerCircleRadius,float innerCircleRadius,int tethaValue,float palinNoiseScale, int circleDivisions) {
+    public Moon(float outerCircleRadius,float innerCircleRadius,int tethaValue,float palinNoiseScale, int circleDivisions, PVector position) {
         this.outerCircleRadius = outerCircleRadius;
         this.innerCircleRadius = innerCircleRadius;
         this.tethaValue = tethaValue;
         this.palinNoiseScale = palinNoiseScale;
         this.circleDivisions = circleDivisions;
+        this.position = position;
 
     }
 
@@ -640,7 +607,7 @@ public class Moon {
         // create the outer circle with points
         this.transparency = transparency;
         pushMatrix();
-        translate(width/2, height/2);
+        translate(this.position.x, this.position.y);
         drawOuterCircle(p);
         drawInnerCircle(p);
         popMatrix();
@@ -715,6 +682,7 @@ public class Moon {
 
 
 public class Ocean {
+    public PVector position;
     public int xyzSteps = 18;
     public float sphereRadius = 180; /// the max outer circle radius of the torus
     public int gammaValue = 20; // again for now between 20 and 100
@@ -740,12 +708,13 @@ public class Ocean {
         // step = (endColorValue - startColorValue) / (numberOfCircle * N / 2);
     }
 
-    public Ocean(int gammaValue,float palinNoiseScale, int xyzSteps, float sphereRadius) {
+    public Ocean(int gammaValue,float palinNoiseScale, int xyzSteps, float sphereRadius, PVector position) {
         this.palinNoiseScale = palinNoiseScale;
         this.gammaValue = gammaValue;
         this.palinNoiseScale = palinNoiseScale;
         this.xyzSteps = xyzSteps;
         this.sphereRadius = sphereRadius;
+        this.position = position;
         // fill(0, 0, 0);
         my_sphere = createShape(SPHERE, this.sphereRadius);
         sphereDetail(120);
@@ -794,7 +763,7 @@ public class Ocean {
         this.transparency = transparency;
         sphereDetail(120);
         pushMatrix();
-        translate(width/2, height/2);
+        translate(this.position.x, this.position.y);
         // rotateZ(millis() * 0.0001 * TWO_PI);
         // rotateY(millis() * 0.0001 * TWO_PI);
         // draw_sphere();
@@ -861,6 +830,11 @@ public class Slider {
         // vectorLogic();
         vectorLimiter();
         return sliderValue;
+    }
+
+    public void setSliderValue(int newSliderValue) {
+        this.sliderValue = newSliderValue;
+        this.s1.x = map(newSliderValue, 0, 100, this.sliderPosition.x , this.sliderPosition.x + this.sliderSize.x);
     }
 
     public void checkHover() {
@@ -1026,6 +1000,7 @@ public class TitleScreen extends AppScreen {
 
 
 public class Torus {
+    PVector position;
     private int numberOfCircle = 20;
     private float bigCircleRadius = 100;
     private float miniCircleRadius = 30;
@@ -1042,7 +1017,8 @@ public class Torus {
 
     float transparency = 1;
     
-    public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius) {
+    public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius, PVector position) {
+        this.position = position;
         this.numberOfCircle = numberOfCircle;
         this.bigCircleRadius = bigCircleRadius;
         this.miniCircleRadius = miniCircleRadius;
@@ -1078,7 +1054,7 @@ public class Torus {
         float xx = map(lastMouseX, 0, width, 0, 360);
         float yy = map(lastMouseY, 0, height, 0, 360);
         pushMatrix();
-        translate(width/2, height/2);
+        translate(this.position.x, this.position.y);
         rotateX(radians(-yy));
         rotateY(radians(-xx));
         noFill(); 

@@ -1,6 +1,7 @@
 
 
 public class Torus {
+    PVector position;
     private int numberOfCircle = 20;
     private float bigCircleRadius = 100;
     private float miniCircleRadius = 30;
@@ -17,7 +18,8 @@ public class Torus {
 
     float transparency = 1;
     
-    public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius) {
+    public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius, PVector position) {
+        this.position = position;
         this.numberOfCircle = numberOfCircle;
         this.bigCircleRadius = bigCircleRadius;
         this.miniCircleRadius = miniCircleRadius;
@@ -53,7 +55,7 @@ public class Torus {
         float xx = map(lastMouseX, 0, width, 0, 360);
         float yy = map(lastMouseY, 0, height, 0, 360);
         pushMatrix();
-        translate(width/2, height/2);
+        translate(this.position.x, this.position.y);
         rotateX(radians(-yy));
         rotateY(radians(-xx));
         noFill(); 

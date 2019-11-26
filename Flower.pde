@@ -27,7 +27,11 @@ public class Flower {
 
     void display(float transparency) {
         this.transparency = transparency;
+        pushMatrix();
+        translate(position.x, position.y);
+        rotate(radians(millis() * rotationSpeedDegPerSec/100));
         drawFlowers(p);
+        popMatrix();
         p++;
     }
 
@@ -45,7 +49,7 @@ public class Flower {
         noFill();
         stroke(#ffffff, transparency * 255);
         pushMatrix();
-            translate(position.x, position.y);
+            // translate(position.x, position.y);
             float angle = TWO_PI / npoints;
             float halfAngle = angle/2.0;
             beginShape();
@@ -60,7 +64,7 @@ public class Flower {
                 curveVertex(sx, sy);
             }
             //curveVertex(x + cos(a+halfAngle) * radius1, y + sin(a+halfAngle) * radius1);
-            endShape(CLOSE);
+            endShape();
         popMatrix();
     }
 

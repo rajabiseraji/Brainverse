@@ -1,6 +1,7 @@
 
 
 public class Moon {
+    PVector position;
     public int circleDivisions = 18;
     public float outerCircleRadius = 180; /// the max outer circle radius of the torus
     public float innerCircleRadius = 170;
@@ -22,12 +23,13 @@ public class Moon {
         // step = (endColorValue - startColorValue) / (numberOfCircle * N / 2);
     }
 
-    public Moon(float outerCircleRadius,float innerCircleRadius,int tethaValue,float palinNoiseScale, int circleDivisions) {
+    public Moon(float outerCircleRadius,float innerCircleRadius,int tethaValue,float palinNoiseScale, int circleDivisions, PVector position) {
         this.outerCircleRadius = outerCircleRadius;
         this.innerCircleRadius = innerCircleRadius;
         this.tethaValue = tethaValue;
         this.palinNoiseScale = palinNoiseScale;
         this.circleDivisions = circleDivisions;
+        this.position = position;
 
     }
 
@@ -35,7 +37,7 @@ public class Moon {
         // create the outer circle with points
         this.transparency = transparency;
         pushMatrix();
-        translate(width/2, height/2);
+        translate(this.position.x, this.position.y);
         drawOuterCircle(p);
         drawInnerCircle(p);
         popMatrix();

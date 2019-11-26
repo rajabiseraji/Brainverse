@@ -46,6 +46,11 @@ public class Slider {
         return sliderValue;
     }
 
+    public void setSliderValue(int newSliderValue) {
+        this.sliderValue = newSliderValue;
+        this.s1.x = map(newSliderValue, 0, 100, this.sliderPosition.x , this.sliderPosition.x + this.sliderSize.x);
+    }
+
     void checkHover() {
         float distance = this.s1.dist(new PVector(mouseX, mouseY));
         if (distance <= nobSize) {

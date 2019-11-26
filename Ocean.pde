@@ -1,6 +1,7 @@
 
 
 public class Ocean {
+    public PVector position;
     public int xyzSteps = 18;
     public float sphereRadius = 180; /// the max outer circle radius of the torus
     public int gammaValue = 20; // again for now between 20 and 100
@@ -26,12 +27,13 @@ public class Ocean {
         // step = (endColorValue - startColorValue) / (numberOfCircle * N / 2);
     }
 
-    public Ocean(int gammaValue,float palinNoiseScale, int xyzSteps, float sphereRadius) {
+    public Ocean(int gammaValue,float palinNoiseScale, int xyzSteps, float sphereRadius, PVector position) {
         this.palinNoiseScale = palinNoiseScale;
         this.gammaValue = gammaValue;
         this.palinNoiseScale = palinNoiseScale;
         this.xyzSteps = xyzSteps;
         this.sphereRadius = sphereRadius;
+        this.position = position;
         // fill(0, 0, 0);
         my_sphere = createShape(SPHERE, this.sphereRadius);
         sphereDetail(120);
@@ -80,7 +82,7 @@ public class Ocean {
         this.transparency = transparency;
         sphereDetail(120);
         pushMatrix();
-        translate(width/2, height/2);
+        translate(this.position.x, this.position.y);
         // rotateZ(millis() * 0.0001 * TWO_PI);
         // rotateY(millis() * 0.0001 * TWO_PI);
         // draw_sphere();

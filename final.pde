@@ -1,14 +1,6 @@
 import java.util.Vector;
 
 
-Torus torus;
-Moon moon;
-Ocean ocean;
-
-
-Slider slider;
-boolean interactionEnabled = false;
-int sliderValue = 20;
 PImage img;
 PFont firaSansBook;
 PFont firaSansExtraBold;
@@ -21,15 +13,7 @@ void setup() {
   img = loadImage("bg.png");
   background(img);
   // background(#525252);
-  torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
-  PVector sliderPosition = new PVector(120, height - 50);
-  slider = new Slider(sliderPosition, 20, "Manual", 20, 20, new PVector(width - 140, 0));
 
-  moon = new Moon(180 , 170, 10, 0.02, 300);
-  ocean = new Ocean(20, 0.002, 100, 150);
-
-  // firaSansBook = createFont("FiraSans-Book.otf", 16);
-  // firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
   TitleScreen titleScreen = new TitleScreen();
   ChooseScreen chooseScreen = new ChooseScreen();
   ManualScreen manualScreen = new ManualScreen();
@@ -45,21 +29,6 @@ void draw() {
   // screen management
   screenManager();
   appScreens.get(currentScreen).display();
-
-  // sliderValue = slider.drawSlider();
-  // torus.setDelta(sliderValue);
-  // torus.updateShape(interactionEnabled);
-  // Torus
-  
-  // moon.setTetha(sliderValue);
-  // moon.updateShape();
-  
-  // Moon
-
-  // Ocean
-  // ocean.setGamma(sliderValue);
-  // ocean.updateShape();
-
 }
 
 void screenManager() {
