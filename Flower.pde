@@ -8,6 +8,8 @@ public class Flower {
     float rotationSpeedDegPerSec = 0.5;
     int p = 0;
 
+    int alphaValue = 20;
+
     public float palinNoiseScale = 0.002;
     public float palinNoiceValue = 0;
 
@@ -17,7 +19,7 @@ public class Flower {
         this.numberOfFlowers = numberOfFlowers;
         this.rotationSpeedDegPerSec = rotationSpeedDegPerSec;
         this.radiusOffest = radiusOffest;
-        this.numberOfStarPoints = numberOfStarPoints
+        this.numberOfStarPoints = numberOfStarPoints;
         this.numberOfStarPointsOffset = numberOfStarPointsOffset;
     }
 
@@ -30,13 +32,15 @@ public class Flower {
         for (int i = 0; i < numberOfFlowers; i++) {
             float noiseValue = noise(p * i * palinNoiseScale, p * i * palinNoiseScale);
             float innerRadius = map(noiseValue, 0, 1, this.radius, this.radius + this.radiusOffest);
-            float outerRadius = map(noiseValue, 0, 1, this.radius + this.radiusOffest/2, this.radius + 1.5*this.radiusOffest);
-            int numberOfPoints = map(noiseValue, 0, 1, this.numberOfPoints, this.numberOfStarPointsOffset);
+            float outerRadius = map(noiseValue, 0, 1, this.radius + this.radiusOffest*2, this.radius + 3*this.radiusOffest);
+            int numberOfPoints = (int)map(noiseValue, 0, 1, this.numberOfStarPoints, this.numberOfStarPoints + this.numberOfStarPointsOffset);
             drawFlower(innerRadius, outerRadius, numberOfPoints);
         }
     }
 
     void drawFlower(float radius1, float radius2, int npoints) {
+        noFill();
+        stroke(#ffffff);
         pushMatrix();
             translate(position.x, position.y);
             float angle = TWO_PI / npoints;
@@ -53,8 +57,17 @@ public class Flower {
                 curveVertex(sx, sy);
             }
             //curveVertex(x + cos(a+halfAngle) * radius1, y + sin(a+halfAngle) * radius1);
-            endShape();
+            endShape(CLOSE);
         popMatrix();
+    }
+
+    void setAlpha(int newAlphaValue) {
+        this.alphaValue = newAlphaValue;
+        this.radius = map(newAlphaValue, 0, 100, 30, 160);
+        this.numberOfFlowers = map(newAlphaValue, 0, 100, 5, 30);
+        this.rotationSpeedDegPerSec = map(newAlphaValue, 0, 100, 0.3, 3);
+        this.radiusOffest = map(newAlphaValue, 0, 100, 10, 30);
+        this.numberOfStarPoints = map(newAlphaValue, 0, 100, 5, 13);
     }
 
 }

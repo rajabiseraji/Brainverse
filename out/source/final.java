@@ -375,18 +375,82 @@ public class ChooseScreen extends AppScreen {
   }
 
 }
+public class Flower {
+    PVector position;
+    float radius = 40;
+    float radiusOffest = 10;
+    int numberOfStarPoints = 7;
+    int numberOfStarPointsOffset = 3;
+    int numberOfFlowers = 5;
+    float rotationSpeedDegPerSec = 0.5f;
+    int p = 0;
+
+    public float palinNoiseScale = 0.002f;
+    public float palinNoiceValue = 0;
+
+    Flower (PVector position, float radius, int numberOfFlowers, float rotationSpeedDegPerSec, float radiusOffest, int numberOfStarPoints, int numberOfStarPointsOffset) {
+        this.position = position;
+        this.radius = radius;
+        this.numberOfFlowers = numberOfFlowers;
+        this.rotationSpeedDegPerSec = rotationSpeedDegPerSec;
+        this.radiusOffest = radiusOffest;
+        this.numberOfStarPoints = numberOfStarPoints;
+        this.numberOfStarPointsOffset = numberOfStarPointsOffset;
+    }
+
+    public void display() {
+        drawFlowers(p);
+        p++;
+    }
+
+    public void drawFlowers(int p) {
+        for (int i = 0; i < numberOfFlowers; i++) {
+            float noiseValue = noise(p * i * palinNoiseScale, p * i * palinNoiseScale);
+            float innerRadius = map(noiseValue, 0, 1, this.radius, this.radius + this.radiusOffest);
+            float outerRadius = map(noiseValue, 0, 1, this.radius + this.radiusOffest*2, this.radius + 3*this.radiusOffest);
+            int numberOfPoints = (int)map(noiseValue, 0, 1, this.numberOfStarPoints, this.numberOfStarPoints + this.numberOfStarPointsOffset);
+            drawFlower(innerRadius, outerRadius, numberOfPoints);
+        }
+    }
+
+    public void drawFlower(float radius1, float radius2, int npoints) {
+        noFill();
+        stroke(0xffffffff);
+        pushMatrix();
+            translate(position.x, position.y);
+            float angle = TWO_PI / npoints;
+            float halfAngle = angle/2.0f;
+            beginShape();
+            curveVertex(0, 0);
+            float a = 0;
+            for (a = 0; a < TWO_PI; a += angle) {
+                float sx = cos(a) * radius2;
+                float sy = sin(a) * radius2;
+                curveVertex(sx, sy);
+                sx = cos(a+halfAngle) * radius1;
+                sy = sin(a+halfAngle) * radius1;
+                curveVertex(sx, sy);
+            }
+            //curveVertex(x + cos(a+halfAngle) * radius1, y + sin(a+halfAngle) * radius1);
+            endShape(CLOSE);
+        popMatrix();
+    }
+
+}
 public class ManualScreen extends AppScreen{
     Torus torus;
     Moon moon;
     Ocean ocean;
     Star star;
+    Flower flower;
 
-    Slider deltaSlider, tethaSlider, gammaSlider, betaSlider;
+    Slider deltaSlider, tethaSlider, gammaSlider, betaSlider, alphaSlider;
     boolean interactionEnabled = false;
     int deltaSliderValue = 20;
     int tethaSliderValue = 20;
     int gammaSliderValue = 20;
     int betaSliderValue = 20;
+    int alphaSliderValue = 20;
     int dominantWave = 0; // 0 delta, 1 tetha, 2 gamma, 3 beta
 
     Button backButton;
@@ -405,12 +469,16 @@ public class ManualScreen extends AppScreen{
         gammaSlider = new Slider(gammaSliderPosition, 20, "Gamma", 20, 100, new PVector(width - 140, 0));
         PVector betaSliderPosition = new PVector(120, (height * 3 / 4) + 150);
         betaSlider = new Slider(betaSliderPosition, 20, "Beta", 20, 100, new PVector(width - 140, 0));
+        PVector alphaSliderPosition = new PVector(120, (height * 3 / 4) + 200);
+        alphaSlider = new Slider(alphaSliderPosition, 20, "Alpha", 20, 100, new PVector(width - 140, 0));
         
         torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
         moon = new Moon(180 , 170, 10, 0.02f, 300);
         ocean = new Ocean(20, 0.002f, 100, 150);
         star = new Star(new PVector(width / 2, 300), 180, 15, 10, 4, 10);
         // PVector position, float edgeLength, int angleDivision, int numberOfEdgePoints, float pointSize,  int shapeRepetitionNumber
+        flower = new Flower(new PVector(width /2, 300), 100, 5, 0.5f, 10, 7, 3);
+        // Flower (PVector position, float radius, int numberOfFlowers, float rotationSpeedDegPerSec, float radiusOffest, int numberOfStarPoints, int numberOfStarPointsOffset) 
         // for now we have Delta -> Torus, Tetha -> moon, Gamma -> ocean
 
 
@@ -428,6 +496,7 @@ public class ManualScreen extends AppScreen{
         tethaSliderValue = tethaSlider.drawSlider();
         gammaSliderValue = gammaSlider.drawSlider();
         betaSliderValue = betaSlider.drawSlider();
+        alphaSliderValue = alphaSlider.drawSlider();
 
         shapeManager();   
     }
@@ -448,6 +517,9 @@ public class ManualScreen extends AppScreen{
         } else if(dominantWave == 3) {
             star.setBeta(betaSliderValue);
             star.display();
+        } else if(dominantWave == 4) {
+            // star.setBeta(betaSliderValue);
+            flower.display();
         }
     }
 
@@ -457,6 +529,7 @@ public class ManualScreen extends AppScreen{
         tethaSlider.mouseDragged();
         gammaSlider.mouseDragged();
         betaSlider.mouseDragged();
+        alphaSlider.mouseDragged();
     }
 
     public void mouseMoveHandler() {
@@ -465,18 +538,21 @@ public class ManualScreen extends AppScreen{
             tethaSlider.mouseDragged();
             gammaSlider.mouseDragged();
             betaSlider.mouseDragged();
+            alphaSlider.mouseDragged();
         } 
     }
 
     public void findDominantWave() {
-        if(deltaSliderValue > tethaSliderValue && deltaSliderValue > gammaSliderValue && deltaSliderValue > betaSliderValue)
+        if(deltaSliderValue > tethaSliderValue && deltaSliderValue > gammaSliderValue && deltaSliderValue > betaSliderValue && deltaSliderValue > alphaSliderValue )
             dominantWave = 0;
-        else if(tethaSliderValue > deltaSliderValue && tethaSliderValue > gammaSliderValue && tethaSliderValue > betaSliderValue)
+        else if(tethaSliderValue > deltaSliderValue && tethaSliderValue > gammaSliderValue && tethaSliderValue > betaSliderValue && tethaSliderValue > alphaSliderValue )
             dominantWave = 1;
-        else if(gammaSliderValue > deltaSliderValue && gammaSliderValue > tethaSliderValue && gammaSliderValue > betaSliderValue)
+        else if(gammaSliderValue > deltaSliderValue && gammaSliderValue > tethaSliderValue && gammaSliderValue > betaSliderValue && gammaSliderValue > alphaSliderValue )
             dominantWave = 2;
-        else if(betaSliderValue > deltaSliderValue && betaSliderValue > tethaSliderValue && betaSliderValue > gammaSliderValue)
+        else if(betaSliderValue > deltaSliderValue && betaSliderValue > tethaSliderValue && betaSliderValue > gammaSliderValue && betaSliderValue > alphaSliderValue)
             dominantWave = 3;
+        else if(alphaSliderValue > deltaSliderValue && alphaSliderValue > tethaSliderValue && alphaSliderValue > gammaSliderValue && alphaSliderValue > betaSliderValue)
+            dominantWave = 4;
         else 
             dominantWave = 0;
     }
