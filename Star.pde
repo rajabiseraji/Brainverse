@@ -9,6 +9,8 @@ public class Star {
     int betaValue = 20;
     float rotationSpeedDegPerSec = 0.5;
 
+    int transparency = 1;
+
     public float palinNoiseScale = 0.002;
     public float palinNoiceValue = 0;
     float vibrationStepSize = 20;
@@ -74,7 +76,7 @@ public class Star {
             PVector originalPoint = new PVector(x, y);
             PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
-            fill(#ffffff);
+            fill(#ffffff, (int)(transparency * 255));
             ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }
@@ -87,7 +89,7 @@ public class Star {
             PVector originalPoint = new PVector(x, y);
             PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
-            fill(#ffffff);
+            fill(#ffffff, (int)(transparency * 255));
             ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }

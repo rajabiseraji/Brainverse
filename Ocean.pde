@@ -13,6 +13,9 @@ public class Ocean {
     float vibrationStepSize = 10;
     int p = 0;
 
+    int transparency = 1;
+    
+
     PShape my_sphere;
     ArrayList<PVector> vertices = new ArrayList<PVector>();
     
@@ -53,7 +56,7 @@ public class Ocean {
             pushMatrix();
             translate(originalPoint.x, originalPoint.y, originalPoint.z);
             noStroke();
-            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue));
+            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue), (int)(transparency * 255));
             // point(x, y, z);
             ellipse(0, 0, 4, 4);
             popMatrix();

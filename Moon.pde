@@ -13,6 +13,8 @@ public class Moon {
     public float palinNoiceValue = 0;
     int p = 0;
     
+    int transparency = 1;
+
     public Moon () {
         /**
         TODO: other inits necessary
@@ -49,7 +51,7 @@ public class Moon {
             float angle = TWO_PI * k / circleDivisions;
             float x = (outerCircleRadius + step) * cos(angle);
             float y = (outerCircleRadius + step) * sin(angle);
-            fill(#ffffff, noiseValue * 255);
+            fill(#ffffff, transparency * noiseValue * 255);
             stroke(#ffffff, 0);
             ellipse(x, y, 2, 2);
             k++;
@@ -64,7 +66,7 @@ public class Moon {
             float angle = TWO_PI * k / circleDivisions;
             float x = (innerCircleRadius + step) * cos(angle);
             float y = (innerCircleRadius + step) * sin(angle);
-            fill(#ffffff, noiseValue * 255);
+            fill(#ffffff, transparency * noiseValue * 255);
             stroke(#ffffff, 0);
             ellipse(x, y, 2, 2);
             k++;

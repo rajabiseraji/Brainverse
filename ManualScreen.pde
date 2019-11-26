@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class ManualScreen extends AppScreen{
     Torus torus;
     Moon moon;
@@ -7,11 +9,15 @@ public class ManualScreen extends AppScreen{
 
     Slider deltaSlider, tethaSlider, gammaSlider, betaSlider, alphaSlider;
     boolean interactionEnabled = false;
-    int deltaSliderValue = 20;
-    int tethaSliderValue = 20;
-    int gammaSliderValue = 20;
-    int betaSliderValue = 20;
-    int alphaSliderValue = 20;
+
+    ArrayList<Wave> waves = new ArrayList<Wave>();
+
+    Wave alphaWave = new Wave(20 , "alpha", 0);
+    Wave betaWave = new Wave(20 , "beta", 1);
+    Wave gammaWave = new Wave(20 , "gamma", 2);
+    Wave tethaWave = new Wave(20 , "tetha", 3);
+    Wave deltaWave = new Wave(20 , "delta", 4);
+
     int dominantWave = 0; // 0 delta, 1 tetha, 2 gamma, 3 beta
 
     Button backButton;
@@ -22,16 +28,22 @@ public class ManualScreen extends AppScreen{
         PImage back = loadImage("back.png", "png");
         backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", false);
 
-        PVector deltaSliderPosition = new PVector(120, (height * 3 / 4));
-        deltaSlider = new Slider(deltaSliderPosition, 20, "Delta", 20, 100, new PVector(width - 140, 0));
-        PVector tethaSliderPosition = new PVector(120, (height * 3 / 4) + 50);
-        tethaSlider = new Slider(tethaSliderPosition, 20, "Tetha", 20, 100, new PVector(width - 140, 0));
+        waves.add(alphaWave);
+        waves.add(betaWave);
+        waves.add(gammaWave);
+        waves.add(tethaWave);
+        waves.add(deltaWave);
+
+        PVector alphaSliderPosition = new PVector(120, (height * 3 / 4));
+        alphaSlider = new Slider(alphaSliderPosition, 20, "Alpha", 20, 100, new PVector(width - 140, 0));
+        PVector betaSliderPosition = new PVector(120, (height * 3 / 4) + 50);
+        betaSlider = new Slider(betaSliderPosition, 20, "Beta", 20, 100, new PVector(width - 140, 0));
         PVector gammaSliderPosition = new PVector(120, (height * 3 / 4) + 100);
         gammaSlider = new Slider(gammaSliderPosition, 20, "Gamma", 20, 100, new PVector(width - 140, 0));
-        PVector betaSliderPosition = new PVector(120, (height * 3 / 4) + 150);
-        betaSlider = new Slider(betaSliderPosition, 20, "Beta", 20, 100, new PVector(width - 140, 0));
-        PVector alphaSliderPosition = new PVector(120, (height * 3 / 4) + 200);
-        alphaSlider = new Slider(alphaSliderPosition, 20, "Alpha", 20, 100, new PVector(width - 140, 0));
+        PVector tethaSliderPosition = new PVector(120, (height * 3 / 4) + 150);
+        tethaSlider = new Slider(tethaSliderPosition, 20, "Tetha", 20, 100, new PVector(width - 140, 0));
+        PVector deltaSliderPosition = new PVector(120, (height * 3 / 4) + 200);
+        deltaSlider = new Slider(deltaSliderPosition, 20, "Delta", 20, 100, new PVector(width - 140, 0));
         
         torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
         moon = new Moon(180 , 170, 10, 0.02, 300);
@@ -53,11 +65,11 @@ public class ManualScreen extends AppScreen{
     void display() {
         backButton.display();
 
-        deltaSliderValue = deltaSlider.drawSlider();
-        tethaSliderValue = tethaSlider.drawSlider();
-        gammaSliderValue = gammaSlider.drawSlider();
-        betaSliderValue = betaSlider.drawSlider();
-        alphaSliderValue = alphaSlider.drawSlider();
+        alphaWave.waveValue = alphaSlider.drawSlider();
+        betaWave.waveValue = betaSlider.drawSlider();
+        gammaWave.waveValue = gammaSlider.drawSlider();
+        tethaWave.waveValue = tethaSlider.drawSlider();
+        deltaWave.waveValue = deltaSlider.drawSlider();
 
         shapeManager();   
     }
@@ -66,21 +78,20 @@ public class ManualScreen extends AppScreen{
         findDominantWave();
 
         if(dominantWave == 0) { // delta
-            torus.setDelta(deltaSliderValue);
-            torus.updateShape(interactionEnabled);
+            flower.setAlpha(alphaWave.waveValue);
+            flower.display();
         } else if(dominantWave == 1) {
-            // tetha
-            moon.setTetha(tethaSliderValue);
-            moon.updateShape();
+            star.setBeta(betaWave.waveValue);
+            star.display();
         } else if(dominantWave == 2) {
-            ocean.setGamma(gammaSliderValue);
+            ocean.setGamma(gammaWave.waveValue);
             ocean.updateShape();
         } else if(dominantWave == 3) {
-            star.setBeta(betaSliderValue);
-            star.display();
+            moon.setTetha(tethaWave.waveValue);
+            moon.updateShape();
         } else if(dominantWave == 4) {
-            flower.setAlpha(alphaSliderValue);
-            flower.display();
+            torus.setDelta(deltaWave.waveValue);
+            torus.updateShape(interactionEnabled);
         }
     }
 
@@ -104,18 +115,14 @@ public class ManualScreen extends AppScreen{
     }
 
     void findDominantWave() {
-        if(deltaSliderValue > tethaSliderValue && deltaSliderValue > gammaSliderValue && deltaSliderValue > betaSliderValue && deltaSliderValue > alphaSliderValue )
-            dominantWave = 0;
-        else if(tethaSliderValue > deltaSliderValue && tethaSliderValue > gammaSliderValue && tethaSliderValue > betaSliderValue && tethaSliderValue > alphaSliderValue )
-            dominantWave = 1;
-        else if(gammaSliderValue > deltaSliderValue && gammaSliderValue > tethaSliderValue && gammaSliderValue > betaSliderValue && gammaSliderValue > alphaSliderValue )
-            dominantWave = 2;
-        else if(betaSliderValue > deltaSliderValue && betaSliderValue > tethaSliderValue && betaSliderValue > gammaSliderValue && betaSliderValue > alphaSliderValue)
-            dominantWave = 3;
-        else if(alphaSliderValue > deltaSliderValue && alphaSliderValue > tethaSliderValue && alphaSliderValue > gammaSliderValue && alphaSliderValue > betaSliderValue)
-            dominantWave = 4;
-        else 
-            dominantWave = 0;
+        
+        Collections.sort(waves);
+        dominantWave = waves.get(0).waveIndex;
+
+        // int difference = waves[0].waveValue - waves[1].waveValue;
+        // if(difference < 20) {
+
+        // }
     }
 
     void mouseClickHandler(MouseEvent event) {
@@ -137,3 +144,5 @@ public class ManualScreen extends AppScreen{
     }
 
 }
+
+

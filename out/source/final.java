@@ -4,6 +4,7 @@ import processing.event.*;
 import processing.opengl.*; 
 
 import java.util.Vector; 
+import java.util.*; 
 
 import java.util.HashMap; 
 import java.util.ArrayList; 
@@ -385,6 +386,8 @@ public class Flower {
     float rotationSpeedDegPerSec = 0.5f;
     int p = 0;
 
+    int transparency = 1;
+
     int alphaValue = 20;
 
     public float palinNoiseScale = 0.002f;
@@ -417,7 +420,7 @@ public class Flower {
 
     public void drawFlower(float radius1, float radius2, int npoints) {
         noFill();
-        stroke(0xffffffff);
+        stroke(0xffffffff, (int)(transparency * 255));
         pushMatrix();
             translate(position.x, position.y);
             float angle = TWO_PI / npoints;
@@ -449,6 +452,8 @@ public class Flower {
     }
 
 }
+
+
 public class ManualScreen extends AppScreen{
     Torus torus;
     Moon moon;
@@ -458,11 +463,15 @@ public class ManualScreen extends AppScreen{
 
     Slider deltaSlider, tethaSlider, gammaSlider, betaSlider, alphaSlider;
     boolean interactionEnabled = false;
-    int deltaSliderValue = 20;
-    int tethaSliderValue = 20;
-    int gammaSliderValue = 20;
-    int betaSliderValue = 20;
-    int alphaSliderValue = 20;
+
+    ArrayList<Wave> waves = new ArrayList<Wave>();
+
+    Wave alphaWave = new Wave(20 , "alpha", 0);
+    Wave betaWave = new Wave(20 , "beta", 1);
+    Wave gammaWave = new Wave(20 , "gamma", 2);
+    Wave tethaWave = new Wave(20 , "tetha", 3);
+    Wave deltaWave = new Wave(20 , "delta", 4);
+
     int dominantWave = 0; // 0 delta, 1 tetha, 2 gamma, 3 beta
 
     Button backButton;
@@ -473,16 +482,22 @@ public class ManualScreen extends AppScreen{
         PImage back = loadImage("back.png", "png");
         backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", false);
 
-        PVector deltaSliderPosition = new PVector(120, (height * 3 / 4));
-        deltaSlider = new Slider(deltaSliderPosition, 20, "Delta", 20, 100, new PVector(width - 140, 0));
-        PVector tethaSliderPosition = new PVector(120, (height * 3 / 4) + 50);
-        tethaSlider = new Slider(tethaSliderPosition, 20, "Tetha", 20, 100, new PVector(width - 140, 0));
+        waves.add(alphaWave);
+        waves.add(betaWave);
+        waves.add(gammaWave);
+        waves.add(tethaWave);
+        waves.add(deltaWave);
+
+        PVector alphaSliderPosition = new PVector(120, (height * 3 / 4));
+        alphaSlider = new Slider(alphaSliderPosition, 20, "Alpha", 20, 100, new PVector(width - 140, 0));
+        PVector betaSliderPosition = new PVector(120, (height * 3 / 4) + 50);
+        betaSlider = new Slider(betaSliderPosition, 20, "Beta", 20, 100, new PVector(width - 140, 0));
         PVector gammaSliderPosition = new PVector(120, (height * 3 / 4) + 100);
         gammaSlider = new Slider(gammaSliderPosition, 20, "Gamma", 20, 100, new PVector(width - 140, 0));
-        PVector betaSliderPosition = new PVector(120, (height * 3 / 4) + 150);
-        betaSlider = new Slider(betaSliderPosition, 20, "Beta", 20, 100, new PVector(width - 140, 0));
-        PVector alphaSliderPosition = new PVector(120, (height * 3 / 4) + 200);
-        alphaSlider = new Slider(alphaSliderPosition, 20, "Alpha", 20, 100, new PVector(width - 140, 0));
+        PVector tethaSliderPosition = new PVector(120, (height * 3 / 4) + 150);
+        tethaSlider = new Slider(tethaSliderPosition, 20, "Tetha", 20, 100, new PVector(width - 140, 0));
+        PVector deltaSliderPosition = new PVector(120, (height * 3 / 4));
+        deltaSlider = new Slider(deltaSliderPosition, 20, "Delta", 20, 200, new PVector(width - 140, 0));
         
         torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
         moon = new Moon(180 , 170, 10, 0.02f, 300);
@@ -504,11 +519,11 @@ public class ManualScreen extends AppScreen{
     public void display() {
         backButton.display();
 
-        deltaSliderValue = deltaSlider.drawSlider();
-        tethaSliderValue = tethaSlider.drawSlider();
-        gammaSliderValue = gammaSlider.drawSlider();
-        betaSliderValue = betaSlider.drawSlider();
-        alphaSliderValue = alphaSlider.drawSlider();
+        alphaWave.waveValue = alphaSlider.drawSlider();
+        betaWave.waveValue = betaSlider.drawSlider();
+        gammaWave.waveValue = gammaSlider.drawSlider();
+        tethaWave.waveValue = tethaSlider.drawSlider();
+        deltaWave.waveValue = deltaSlider.drawSlider();
 
         shapeManager();   
     }
@@ -517,21 +532,20 @@ public class ManualScreen extends AppScreen{
         findDominantWave();
 
         if(dominantWave == 0) { // delta
-            torus.setDelta(deltaSliderValue);
-            torus.updateShape(interactionEnabled);
+            flower.setAlpha(alphaWave.waveValue);
+            flower.display();
         } else if(dominantWave == 1) {
-            // tetha
-            moon.setTetha(tethaSliderValue);
-            moon.updateShape();
+            star.setBeta(betaWave.waveValue);
+            star.display();
         } else if(dominantWave == 2) {
-            ocean.setGamma(gammaSliderValue);
+            ocean.setGamma(gammaWave.waveValue);
             ocean.updateShape();
         } else if(dominantWave == 3) {
-            star.setBeta(betaSliderValue);
-            star.display();
+            moon.setTetha(tethaWave.waveValue);
+            moon.updateShape();
         } else if(dominantWave == 4) {
-            flower.setAlpha(alphaSliderValue);
-            flower.display();
+            torus.setDelta(deltaWave.waveValue);
+            torus.updateShape(interactionEnabled);
         }
     }
 
@@ -555,18 +569,14 @@ public class ManualScreen extends AppScreen{
     }
 
     public void findDominantWave() {
-        if(deltaSliderValue > tethaSliderValue && deltaSliderValue > gammaSliderValue && deltaSliderValue > betaSliderValue && deltaSliderValue > alphaSliderValue )
-            dominantWave = 0;
-        else if(tethaSliderValue > deltaSliderValue && tethaSliderValue > gammaSliderValue && tethaSliderValue > betaSliderValue && tethaSliderValue > alphaSliderValue )
-            dominantWave = 1;
-        else if(gammaSliderValue > deltaSliderValue && gammaSliderValue > tethaSliderValue && gammaSliderValue > betaSliderValue && gammaSliderValue > alphaSliderValue )
-            dominantWave = 2;
-        else if(betaSliderValue > deltaSliderValue && betaSliderValue > tethaSliderValue && betaSliderValue > gammaSliderValue && betaSliderValue > alphaSliderValue)
-            dominantWave = 3;
-        else if(alphaSliderValue > deltaSliderValue && alphaSliderValue > tethaSliderValue && alphaSliderValue > gammaSliderValue && alphaSliderValue > betaSliderValue)
-            dominantWave = 4;
-        else 
-            dominantWave = 0;
+        
+        Collections.sort(waves);
+        dominantWave = waves.get(0).waveIndex;
+
+        // int difference = waves[0].waveValue - waves[1].waveValue;
+        // if(difference < 20) {
+
+        // }
     }
 
     public void mouseClickHandler(MouseEvent event) {
@@ -590,6 +600,8 @@ public class ManualScreen extends AppScreen{
 }
 
 
+
+
 public class Moon {
     public int circleDivisions = 18;
     public float outerCircleRadius = 180; /// the max outer circle radius of the torus
@@ -603,6 +615,8 @@ public class Moon {
     public float palinNoiceValue = 0;
     int p = 0;
     
+    int transparency = 1;
+
     public Moon () {
         /**
         TODO: other inits necessary
@@ -639,7 +653,7 @@ public class Moon {
             float angle = TWO_PI * k / circleDivisions;
             float x = (outerCircleRadius + step) * cos(angle);
             float y = (outerCircleRadius + step) * sin(angle);
-            fill(0xffffffff, noiseValue * 255);
+            fill(0xffffffff, transparency * noiseValue * 255);
             stroke(0xffffffff, 0);
             ellipse(x, y, 2, 2);
             k++;
@@ -654,7 +668,7 @@ public class Moon {
             float angle = TWO_PI * k / circleDivisions;
             float x = (innerCircleRadius + step) * cos(angle);
             float y = (innerCircleRadius + step) * sin(angle);
-            fill(0xffffffff, noiseValue * 255);
+            fill(0xffffffff, transparency * noiseValue * 255);
             stroke(0xffffffff, 0);
             ellipse(x, y, 2, 2);
             k++;
@@ -709,6 +723,9 @@ public class Ocean {
     float vibrationStepSize = 10;
     int p = 0;
 
+    int transparency = 1;
+    
+
     PShape my_sphere;
     ArrayList<PVector> vertices = new ArrayList<PVector>();
     
@@ -749,7 +766,7 @@ public class Ocean {
             pushMatrix();
             translate(originalPoint.x, originalPoint.y, originalPoint.z);
             noStroke();
-            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue));
+            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue), (int)(transparency * 255));
             // point(x, y, z);
             ellipse(0, 0, 4, 4);
             popMatrix();
@@ -883,6 +900,8 @@ public class Star {
     int betaValue = 20;
     float rotationSpeedDegPerSec = 0.5f;
 
+    int transparency = 1;
+
     public float palinNoiseScale = 0.002f;
     public float palinNoiceValue = 0;
     float vibrationStepSize = 20;
@@ -948,7 +967,7 @@ public class Star {
             PVector originalPoint = new PVector(x, y);
             PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
-            fill(0xffffffff);
+            fill(0xffffffff, (int)(transparency * 255));
             ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }
@@ -961,7 +980,7 @@ public class Star {
             PVector originalPoint = new PVector(x, y);
             PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
-            fill(0xffffffff);
+            fill(0xffffffff, (int)(transparency * 255));
             ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }
@@ -1014,6 +1033,8 @@ public class Torus {
     int k=0;
     int N=20; // is the number of points in the big circle's circumference 
     // if the N is high it means the number of mini circles are higher!
+
+    int transparency = 1;
     
     public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius) {
         this.numberOfCircle = numberOfCircle;
@@ -1083,7 +1104,7 @@ public class Torus {
             strokeWeight(2);
             if (i%2==0) {
                 currentColorValue += step;
-                stroke(currentColor);
+                stroke(currentColor, (int)(transparency * 255));
             }
             else stroke(-1);
             point(x, y);
@@ -1123,7 +1144,32 @@ public class Torus {
         miniCircleRadius = map(newDeltaValue, 0, 100, 100, 5); 
         N = (int)map(newDeltaValue, 0, 100, 5, 100); // 30, 100
     }
+
 }
+class Wave implements Comparable<Wave> {
+        int waveValue = 0;
+        String waveName = "";
+        int waveIndex = 0;
+        float waveTransparency = 0;
+
+        Wave(int waveValue ,String waveName , int waveIndex) {
+            this.waveValue = waveValue;
+            this.waveName = waveName;
+            this.waveIndex = waveIndex;
+        }
+
+        public void updateWave(int newWaveValue) {
+            this.waveValue = newWaveValue;
+        }
+
+        public void setTransparency(float newT) {
+            this.waveTransparency = newT;
+        }
+
+        public int compareTo(Wave anotherWave) {
+            return anotherWave.waveValue - this.waveValue;
+        }
+    }
   public void settings() {  size(768, 1024, P3D); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "Final" };

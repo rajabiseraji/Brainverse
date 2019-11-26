@@ -8,6 +8,8 @@ public class Flower {
     float rotationSpeedDegPerSec = 0.5;
     int p = 0;
 
+    int transparency = 1;
+
     int alphaValue = 20;
 
     public float palinNoiseScale = 0.002;
@@ -40,7 +42,7 @@ public class Flower {
 
     void drawFlower(float radius1, float radius2, int npoints) {
         noFill();
-        stroke(#ffffff);
+        stroke(#ffffff, (int)(transparency * 255));
         pushMatrix();
             translate(position.x, position.y);
             float angle = TWO_PI / npoints;
