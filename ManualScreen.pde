@@ -2,13 +2,15 @@ public class ManualScreen extends AppScreen{
     Torus torus;
     Moon moon;
     Ocean ocean;
+    Star star;
 
-    Slider deltaSlider, tethaSlider, gammaSlider;
+    Slider deltaSlider, tethaSlider, gammaSlider, betaSlider;
     boolean interactionEnabled = false;
     int deltaSliderValue = 20;
     int tethaSliderValue = 20;
     int gammaSliderValue = 20;
-    int dominantWave = 0; // 0 delta, 1 tetha, 2 gamma
+    int betaSliderValue = 20;
+    int dominantWave = 0; // 0 delta, 1 tetha, 2 gamma, 3 beta
 
     Button backButton;
 
@@ -24,12 +26,13 @@ public class ManualScreen extends AppScreen{
         tethaSlider = new Slider(tethaSliderPosition, 20, "Tetha", 20, 100, new PVector(width - 140, 0));
         PVector gammaSliderPosition = new PVector(120, (height * 3 / 4) + 100);
         gammaSlider = new Slider(gammaSliderPosition, 20, "Gamma", 20, 100, new PVector(width - 140, 0));
+        PVector betaSliderPosition = new PVector(120, (height * 3 / 4) + 150);
+        betaSlider = new Slider(betaSliderPosition, 20, "Beta", 20, 100, new PVector(width - 140, 0));
         
         torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
-
         moon = new Moon(180 , 170, 10, 0.02, 300);
         ocean = new Ocean(20, 0.002, 100, 150);
-
+        star = new Star(100, 200);
         // for now we have Delta -> Torus, Tetha -> moon, Gamma -> ocean
     }
 
@@ -39,13 +42,14 @@ public class ManualScreen extends AppScreen{
         deltaSliderValue = deltaSlider.drawSlider();
         tethaSliderValue = tethaSlider.drawSlider();
         gammaSliderValue = gammaSlider.drawSlider();
+        betaSliderValue = betaSlider.drawSlider();
 
         shapeManager();   
     }
 
     void shapeManager() {
         findDominantWave();
-        
+
         if(dominantWave == 0) { // delta
             torus.setDelta(deltaSliderValue);
             torus.updateShape(interactionEnabled);
@@ -56,6 +60,8 @@ public class ManualScreen extends AppScreen{
         } else if(dominantWave == 2) {
             ocean.setGamma(gammaSliderValue);
             ocean.updateShape();
+        } else if(dominantWave == 3) {
+            star.display();
         }
     }
 
@@ -64,6 +70,7 @@ public class ManualScreen extends AppScreen{
         deltaSlider.mouseDragged();
         tethaSlider.mouseDragged();
         gammaSlider.mouseDragged();
+        betaSlider.mouseDragged();
     }
 
     void mouseMoveHandler() {
@@ -71,16 +78,19 @@ public class ManualScreen extends AppScreen{
             deltaSlider.mouseDragged();
             tethaSlider.mouseDragged();
             gammaSlider.mouseDragged();
+            betaSlider.mouseDragged();
         } 
     }
 
     void findDominantWave() {
-        if(deltaSliderValue > tethaSliderValue && deltaSliderValue > gammaSliderValue)
+        if(deltaSliderValue > tethaSliderValue && deltaSliderValue > gammaSliderValue && deltaSliderValue > betaSliderValue)
             dominantWave = 0;
-        else if(tethaSliderValue > deltaSliderValue && tethaSliderValue > gammaSliderValue)
+        else if(tethaSliderValue > deltaSliderValue && tethaSliderValue > gammaSliderValue && tethaSliderValue > betaSliderValue)
             dominantWave = 1;
-        else if(gammaSliderValue > deltaSliderValue && gammaSliderValue > tethaSliderValue)
+        else if(gammaSliderValue > deltaSliderValue && gammaSliderValue > tethaSliderValue && gammaSliderValue > betaSliderValue)
             dominantWave = 2;
+        else if(betaSliderValue > deltaSliderValue && betaSliderValue > tethaSliderValue && betaSliderValue > gammaSliderValue)
+            dominantWave = 3;
         else 
             dominantWave = 0;
     }
