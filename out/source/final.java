@@ -20,20 +20,19 @@ public class Final extends PApplet {
 
 
 Torus torus;
+Moon moon;
+Ocean ocean;
+
+
 Slider slider;
 boolean interactionEnabled = false;
 int sliderValue = 20;
 PImage img;
 PFont firaSansBook;
 PFont firaSansExtraBold;
-Button autoButton, manualButton, scannerButton, backButton;
-Boolean automaticOrManual = true;
 
 int currentScreen = 0; // 0 title screen, 1 choose auto/manual, 2 main app screen manual, 3 main app screen auto
 int elapsedTime = 0; 
-
-Moon moon;
-Ocean ocean;
 Vector<AppScreen> appScreens = new Vector<AppScreen>();
 public void setup() {
   
@@ -47,33 +46,15 @@ public void setup() {
   moon = new Moon(180 , 170, 10, 0.02f, 300);
   ocean = new Ocean(20, 0.002f, 100, 150);
 
-  // PVector buttonSize = new PVector(width / 2 - 10, width / 2 - 10);
-  // PVector buttonPosition = new PVector(5, (height - buttonSize.y) / 2);
-  // PVector manualButtonPosition = new PVector(buttonSize.x + 10, buttonPosition.y);
-  // PVector firstButtonImageSize = new PVector(buttonSize.x * 2 / 3, buttonSize.x * 2 / 3);
-  // PVector manualButtonImageSize = new PVector(buttonSize.x * 0.8, buttonSize.y * 0.8);
-  // PVector backButtonImageSize = new PVector(width/15,height/20);
-  // PVector backButtonPosition = new PVector(20, height-40);
-  // PVector scannerButtonImageSize = new PVector(1043/8, 560/8);
-  // PVector scannerButtonPosition = new PVector((width-scannerButtonImageSize.x)/2, (height-scannerButtonImageSize.y)-40);
-  //1043 × 560 scanner
-
-  // PImage museHeadset = loadImage("headset.png", "png");
-  // PImage menuSlider = loadImage("slider.png", "png");
-  // PImage scanner = loadImage("scanner.png", "png");
-  // PImage back = loadImage("back.png", "png");
-  // // autoButton = new Button(buttonSize, buttonPosition, museHeadset, firstButtonImageSize, "Automatic", automaticOrManual);
-  // manualButton = new Button(buttonSize, manualButtonPosition, menuSlider, manualButtonImageSize, "Manual", !automaticOrManual);
-  // scannerButton = new Button(scannerButtonImageSize, scannerButtonPosition, scanner, scannerButtonImageSize, "", !automaticOrManual);
-  // backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", !automaticOrManual);
-
-
   // firaSansBook = createFont("FiraSans-Book.otf", 16);
   // firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
   TitleScreen titleScreen = new TitleScreen();
   ChooseScreen chooseScreen = new ChooseScreen();
+  ManualScreen manualScreen = new ManualScreen();
   appScreens.add(titleScreen);
   appScreens.add(chooseScreen);
+  appScreens.add(manualScreen);
+  appScreens.add(manualScreen);
 }
 
 public void draw() {
@@ -97,10 +78,6 @@ public void draw() {
   // ocean.setGamma(sliderValue);
   // ocean.updateShape();
 
-  // autoButton.display();
-  // manualButton.display();
-  // scannerButton.display();
-  // backButton.display();
 }
 
 public void screenManager() {
@@ -108,20 +85,38 @@ public void screenManager() {
     elapsedTime = millis();
     if(elapsedTime > 10000)
       currentScreen++;
+  } else if(currentScreen == 1) {
+    ChooseScreen chooseScreen = (ChooseScreen)appScreens.get(1);
+    if(chooseScreen.startScanning) {
+      elapsedTime = millis();
+      if(elapsedTime > 2000)
+        currentScreen = chooseScreen.automaticOrManual ? 2 : 3;
+      chooseScreen.startScanning = false;
+    }
+  } else if(currentScreen == 2 || currentScreen == 3) {
+    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+    if (m.backButton.active) {
+      currentScreen = 1;
+      m.backButton.active = false;
+    }
   }
 }
 
-public void mouseDragged() {
+
+public void mouseDragged(MouseEvent event) {
   // println("I'm dragged");
-  slider.mouseDragged();
+  if (currentScreen == 3 || currentScreen == 2) {
+    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+    m.mouseDragHandler(event);
+  }
 }
 
-// void mouseMoved() {
-//     println(mousePressed);
-//   if(mousePressed && (mouseButton == LEFT)) {
-//     slider.mouseDragged();
-//   } 
-// }
+public void mouseMoved() {
+  if(currentScreen == 3 || currentScreen == 2) {
+    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+    m.mouseMoveHandler();
+  }
+}
 
 public void keyPressed(){
     if(key == CODED) { 
@@ -146,6 +141,9 @@ public void mouseClicked(MouseEvent event) {
   if(currentScreen == 1) {
     ChooseScreen chooseScreen = (ChooseScreen)appScreens.get(1);
     chooseScreen.mouseClickHandler(event);
+  } else if(currentScreen == 3 || currentScreen == 2) {
+    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+    m.mouseClickHandler(event);
   }
 }
 
@@ -328,10 +326,11 @@ public class Button {
 public class ChooseScreen extends AppScreen {
   PFont firaSansBook;
   PFont firaSansExtraBold;
-  Button autoButton, manualButton, scannerButton, backButton;
+  Button autoButton, manualButton, scannerButton;
   Boolean automaticOrManual = true;
   boolean lastAutoButtonState = false;
   boolean lastManualButtonState = false;
+  boolean startScanning = false;
 
   ChooseScreen() {
     PVector buttonSize = new PVector(width / 2 - 10, width / 2 - 10);
@@ -339,8 +338,8 @@ public class ChooseScreen extends AppScreen {
     PVector manualButtonPosition = new PVector(buttonSize.x + 10, buttonPosition.y);
     PVector firstButtonImageSize = new PVector(buttonSize.x * 2 / 3, buttonSize.x * 2 / 3);
     PVector manualButtonImageSize = new PVector(buttonSize.x * 0.8f, buttonSize.y * 0.8f);
-    PVector backButtonImageSize = new PVector(width/15,height/20);
-    PVector backButtonPosition = new PVector(20, height-40);
+    // PVector backButtonImageSize = new PVector(width/15,height/20);
+    // PVector backButtonPosition = new PVector(20, height-40);
     PVector scannerButtonImageSize = new PVector(1043/8, 560/8);
     PVector scannerButtonPosition = new PVector((width-scannerButtonImageSize.x)/2, (height-scannerButtonImageSize.y)-40);
     //1043 × 560 scanner
@@ -348,11 +347,11 @@ public class ChooseScreen extends AppScreen {
     PImage museHeadset = loadImage("headset.png", "png");
     PImage menuSlider = loadImage("slider.png", "png");
     PImage scanner = loadImage("scanner.png", "png");
-    PImage back = loadImage("back.png", "png");
+    // PImage back = loadImage("back.png", "png");
     autoButton = new Button(buttonSize, buttonPosition, museHeadset, firstButtonImageSize, "Automatic", automaticOrManual);
     manualButton = new Button(buttonSize, manualButtonPosition, menuSlider, manualButtonImageSize, "Manual", !automaticOrManual);
-    scannerButton = new Button(scannerButtonImageSize, scannerButtonPosition, scanner, scannerButtonImageSize, "", !automaticOrManual);
-    backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", !automaticOrManual);
+    scannerButton = new Button(scannerButtonImageSize, scannerButtonPosition, scanner, scannerButtonImageSize, "", false);
+    // backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", false);
 
 
     firaSansBook = createFont("FiraSans-Book.otf", 16);
@@ -363,10 +362,16 @@ public class ChooseScreen extends AppScreen {
     autoButton.display();
     manualButton.display();
     scannerButton.display();
-    backButton.display();
+    // backButton.display();
   }
 
   public void mouseClickHandler(MouseEvent event) {
+    scannerButton.mouseClickHandler(event);
+    if(scannerButton.active) {
+      startScanning = true;
+      scannerButton.active = false;
+    }
+
     lastAutoButtonState = autoButton.active;
     lastManualButtonState = manualButton.active;
 
@@ -377,7 +382,69 @@ public class ChooseScreen extends AppScreen {
       autoButton.deactivateButton();
     else if(lastManualButtonState && autoButton.active)
       manualButton.deactivateButton();
+
+    automaticOrManual = autoButton.active ? true : false;
+    
   }
+
+}
+public class ManualScreen extends AppScreen{
+    Torus torus;
+    Moon moon;
+    Ocean ocean;
+
+    Slider slider;
+    boolean interactionEnabled = false;
+    int sliderValue = 20;
+
+    Button backButton;
+
+    public ManualScreen () {
+        PVector backButtonImageSize = new PVector(width/15,height/20);
+        PVector backButtonPosition = new PVector(20, height-40);
+        PImage back = loadImage("back.png", "png");
+        backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", false);
+
+        torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
+        PVector sliderPosition = new PVector(120, height - 50);
+        slider = new Slider(sliderPosition, 20, "Manual", 20, 20, new PVector(width - 140, 0));
+
+        moon = new Moon(180 , 170, 10, 0.02f, 300);
+        ocean = new Ocean(20, 0.002f, 100, 150);
+    }
+
+    public void display() {
+        backButton.display();
+
+        sliderValue = slider.drawSlider();
+        // torus.setDelta(sliderValue);
+        // torus.updateShape(interactionEnabled);
+        // Torus
+        
+        // moon.setTetha(sliderValue);
+        // moon.updateShape();
+        
+        // Moon
+
+        // Ocean
+        // ocean.setGamma(sliderValue);
+        // ocean.updateShape();
+    }
+
+    public void mouseDragHandler(MouseEvent event) {
+        // println("I'm dragged");
+        slider.mouseDragged();
+    }
+
+    public void mouseMoveHandler() {
+        if(mousePressed && (mouseButton == LEFT)) {
+            slider.mouseDragged();
+        } 
+    }
+
+    public void mouseClickHandler(MouseEvent event) {
+        backButton.mouseClickHandler(event);
+    }
 
 }
 

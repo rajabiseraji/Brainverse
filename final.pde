@@ -2,6 +2,10 @@ import java.util.Vector;
 
 
 Torus torus;
+Moon moon;
+Ocean ocean;
+
+
 Slider slider;
 boolean interactionEnabled = false;
 int sliderValue = 20;
@@ -11,9 +15,6 @@ PFont firaSansExtraBold;
 
 int currentScreen = 0; // 0 title screen, 1 choose auto/manual, 2 main app screen manual, 3 main app screen auto
 int elapsedTime = 0; 
-
-Moon moon;
-Ocean ocean;
 Vector<AppScreen> appScreens = new Vector<AppScreen>();
 void setup() {
   size(768, 1024, P3D);
@@ -31,8 +32,11 @@ void setup() {
   // firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
   TitleScreen titleScreen = new TitleScreen();
   ChooseScreen chooseScreen = new ChooseScreen();
+  ManualScreen manualScreen = new ManualScreen();
   appScreens.add(titleScreen);
   appScreens.add(chooseScreen);
+  appScreens.add(manualScreen);
+  appScreens.add(manualScreen);
 }
 
 void draw() {
@@ -69,22 +73,32 @@ void screenManager() {
       elapsedTime = millis();
       if(elapsedTime > 2000)
         currentScreen = chooseScreen.automaticOrManual ? 2 : 3;
+      chooseScreen.startScanning = false;
+    }
+  } else if(currentScreen == 2 || currentScreen == 3) {
+    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+    if (m.backButton.active) {
+      currentScreen = 1;
+      m.backButton.active = false;
     }
   }
 }
 
 
-void mouseDragged() {
+void mouseDragged(MouseEvent event) {
   // println("I'm dragged");
-  slider.mouseDragged();
+  if (currentScreen == 3 || currentScreen == 2) {
+    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+    m.mouseDragHandler(event);
+  }
 }
 
-// void mouseMoved() {
-//     println(mousePressed);
-//   if(mousePressed && (mouseButton == LEFT)) {
-//     slider.mouseDragged();
-//   } 
-// }
+void mouseMoved() {
+  if(currentScreen == 3 || currentScreen == 2) {
+    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+    m.mouseMoveHandler();
+  }
+}
 
 void keyPressed(){
     if(key == CODED) { 
@@ -109,6 +123,9 @@ void mouseClicked(MouseEvent event) {
   if(currentScreen == 1) {
     ChooseScreen chooseScreen = (ChooseScreen)appScreens.get(1);
     chooseScreen.mouseClickHandler(event);
+  } else if(currentScreen == 3 || currentScreen == 2) {
+    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+    m.mouseClickHandler(event);
   }
 }
 
