@@ -62,6 +62,7 @@ void draw() {
   background(img);
 
   // screen management
+  screenManager();
   appScreens.get(currentScreen).display();
 
   // sliderValue = slider.drawSlider();
@@ -87,7 +88,7 @@ void draw() {
 void screenManager() {
   if(currentScreen == 0) {
     elapsedTime = millis();
-    if(elapsedTime > 2000)
+    if(elapsedTime > 10000)
       currentScreen++;
   }
 }
