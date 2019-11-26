@@ -52,7 +52,7 @@ public class Moon {
             float angle = TWO_PI * k / circleDivisions;
             float x = (outerCircleRadius + step) * cos(angle);
             float y = (outerCircleRadius + step) * sin(angle);
-            fill(#ffffff, transparency * noiseValue);
+            fill(#ffffff, transparency * noiseValue * 255);
             stroke(#ffffff, 0);
             ellipse(x, y, 2, 2);
             k++;
@@ -67,7 +67,7 @@ public class Moon {
             float angle = TWO_PI * k / circleDivisions;
             float x = (innerCircleRadius + step) * cos(angle);
             float y = (innerCircleRadius + step) * sin(angle);
-            fill(#ffffff, transparency * noiseValue);
+            fill(#ffffff, transparency * noiseValue * 255);
             stroke(#ffffff, 0);
             ellipse(x, y, 2, 2);
             k++;

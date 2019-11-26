@@ -43,7 +43,7 @@ public class Flower {
 
     void drawFlower(float radius1, float radius2, int npoints) {
         noFill();
-        stroke(#ffffff, transparency);
+        stroke(#ffffff, transparency * 255);
         pushMatrix();
             translate(position.x, position.y);
             float angle = TWO_PI / npoints;

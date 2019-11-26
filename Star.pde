@@ -77,7 +77,7 @@ public class Star {
             PVector originalPoint = new PVector(x, y);
             PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
-            fill(#ffffff, transparency);
+            fill(#ffffff, transparency * 255);
             ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }
@@ -90,7 +90,7 @@ public class Star {
             PVector originalPoint = new PVector(x, y);
             PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
-            fill(#ffffff, transparency);
+            fill(#ffffff, transparency * 255);
             ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }

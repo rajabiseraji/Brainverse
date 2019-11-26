@@ -421,7 +421,7 @@ public class Flower {
 
     public void drawFlower(float radius1, float radius2, int npoints) {
         noFill();
-        stroke(0xffffffff, (int)(transparency * 255));
+        stroke(0xffffffff, transparency * 255);
         pushMatrix();
             translate(position.x, position.y);
             float angle = TWO_PI / npoints;
@@ -535,23 +535,18 @@ public class ManualScreen extends AppScreen{
         if(dominantWave == 0) { // delta
             flower.setAlpha(alphaWave.waveValue);
             flower.display(alphaWave.waveTransparency);
-            println("alphaWave.waveTransparency:"+alphaWave.waveTransparency);
         } else if(dominantWave == 1) {
             star.setBeta(betaWave.waveValue);
             star.display(betaWave.waveTransparency);
-            println("betaWave.waveTransparency:"+betaWave.waveTransparency);
         } else if(dominantWave == 2) {
             ocean.setGamma(gammaWave.waveValue);
             ocean.updateShape(gammaWave.waveTransparency);
-            println("gammaWave.waveTransparency:"+gammaWave.waveTransparency);
         } else if(dominantWave == 3) {
             moon.setTetha(tethaWave.waveValue);
             moon.updateShape(tethaWave.waveTransparency);
-            println("tethaWave.waveTransparency:"+tethaWave.waveTransparency);
         } else if(dominantWave == 4) {
             torus.setDelta(deltaWave.waveValue);
             torus.updateShape(interactionEnabled, deltaWave.waveTransparency);
-            println("deltaWave.waveTransparency:"+deltaWave.waveTransparency);
         }
     }
 
@@ -775,7 +770,7 @@ public class Ocean {
             pushMatrix();
             translate(originalPoint.x, originalPoint.y, originalPoint.z);
             noStroke();
-            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue), (int)(transparency * 255));
+            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue), transparency * 255);
             // point(x, y, z);
             ellipse(0, 0, 4, 4);
             popMatrix();
@@ -978,7 +973,7 @@ public class Star {
             PVector originalPoint = new PVector(x, y);
             PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
-            fill(0xffffffff, (int)(transparency * 255));
+            fill(0xffffffff, transparency * 255);
             ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }
@@ -991,7 +986,7 @@ public class Star {
             PVector originalPoint = new PVector(x, y);
             PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
-            fill(0xffffffff, (int)(transparency * 255));
+            fill(0xffffffff, transparency * 255);
             ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }
@@ -1116,7 +1111,7 @@ public class Torus {
             strokeWeight(2);
             if (i%2==0) {
                 currentColorValue += step;
-                stroke(currentColor, (int)(transparency * 255));
+                stroke(currentColor, transparency * 255);
             }
             else stroke(-1);
             point(x, y);

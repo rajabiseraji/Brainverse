@@ -86,7 +86,7 @@ public class Torus {
             strokeWeight(2);
             if (i%2==0) {
                 currentColorValue += step;
-                stroke(currentColor, transparency);
+                stroke(currentColor, transparency * 255);
             }
             else stroke(-1);
             point(x, y);

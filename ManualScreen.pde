@@ -80,23 +80,18 @@ public class ManualScreen extends AppScreen{
         if(dominantWave == 0) { // delta
             flower.setAlpha(alphaWave.waveValue);
             flower.display(alphaWave.waveTransparency);
-            println("alphaWave.waveTransparency:"+alphaWave.waveTransparency);
         } else if(dominantWave == 1) {
             star.setBeta(betaWave.waveValue);
             star.display(betaWave.waveTransparency);
-            println("betaWave.waveTransparency:"+betaWave.waveTransparency);
         } else if(dominantWave == 2) {
             ocean.setGamma(gammaWave.waveValue);
             ocean.updateShape(gammaWave.waveTransparency);
-            println("gammaWave.waveTransparency:"+gammaWave.waveTransparency);
         } else if(dominantWave == 3) {
             moon.setTetha(tethaWave.waveValue);
             moon.updateShape(tethaWave.waveTransparency);
-            println("tethaWave.waveTransparency:"+tethaWave.waveTransparency);
         } else if(dominantWave == 4) {
             torus.setDelta(deltaWave.waveValue);
             torus.updateShape(interactionEnabled, deltaWave.waveTransparency);
-            println("deltaWave.waveTransparency:"+deltaWave.waveTransparency);
         }
     }
 

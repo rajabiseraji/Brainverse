@@ -56,7 +56,7 @@ public class Ocean {
             pushMatrix();
             translate(originalPoint.x, originalPoint.y, originalPoint.z);
             noStroke();
-            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue), transparency);
+            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue), transparency * 255);
             // point(x, y, z);
             ellipse(0, 0, 4, 4);
             popMatrix();
