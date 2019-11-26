@@ -393,9 +393,11 @@ public class ManualScreen extends AppScreen{
     Moon moon;
     Ocean ocean;
 
-    Slider slider;
+    Slider deltaSlider, tethaSlider, gammaSlider;
     boolean interactionEnabled = false;
-    int sliderValue = 20;
+    int deltaSliderValue = 20;
+    int tethaSliderValue = 20;
+    int gammaSliderValue = 20;
 
     Button backButton;
 
@@ -405,18 +407,27 @@ public class ManualScreen extends AppScreen{
         PImage back = loadImage("back.png", "png");
         backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", false);
 
+        PVector deltaSliderPosition = new PVector(120, (height * 3 / 4));
+        deltaSlider = new Slider(deltaSliderPosition, 20, "Delta", 20, 100, new PVector(width - 140, 0));
+        PVector tethaSliderPosition = new PVector(120, (height * 3 / 4) + 50);
+        tethaSlider = new Slider(tethaSliderPosition, 20, "Tetha", 20, 100, new PVector(width - 140, 0));
+        PVector gammaSliderPosition = new PVector(120, (height * 3 / 4) + 100);
+        gammaSlider = new Slider(gammaSliderPosition, 20, "Gamma", 20, 100, new PVector(width - 140, 0));
+        
         torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
-        PVector sliderPosition = new PVector(120, height - 50);
-        slider = new Slider(sliderPosition, 20, "Manual", 20, 20, new PVector(width - 140, 0));
 
         moon = new Moon(180 , 170, 10, 0.02f, 300);
         ocean = new Ocean(20, 0.002f, 100, 150);
+
+        // for now we have Delta -> Torus, Tetha -> moon, Gamma -> ocean
     }
 
     public void display() {
         backButton.display();
 
-        sliderValue = slider.drawSlider();
+        deltaSliderValue = deltaSlider.drawSlider();
+        tethaSliderValue = tethaSlider.drawSlider();
+        gammaSliderValue = gammaSlider.drawSlider();
         // torus.setDelta(sliderValue);
         // torus.updateShape(interactionEnabled);
         // Torus
@@ -433,12 +444,16 @@ public class ManualScreen extends AppScreen{
 
     public void mouseDragHandler(MouseEvent event) {
         // println("I'm dragged");
-        slider.mouseDragged();
+        deltaSlider.mouseDragged();
+        tethaSlider.mouseDragged();
+        gammaSlider.mouseDragged();
     }
 
     public void mouseMoveHandler() {
         if(mousePressed && (mouseButton == LEFT)) {
-            slider.mouseDragged();
+            deltaSlider.mouseDragged();
+            tethaSlider.mouseDragged();
+            gammaSlider.mouseDragged();
         } 
     }
 
