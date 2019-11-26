@@ -7,8 +7,8 @@ public class TitleScreen extends AppScreen {
     titleBar = loadImage("titlebar.png");
     titleBarSize = new PVector(titleBar.width, titleBar.height);
 
-    titleImage.resize(width * 0.8, (width * 0.8) * (titleImageSize.y / titleImageSize.x));
-    titleBar.resize(width * 0.8, (width * 0.8) * (titleBarSize.y / titleBarSize.x));
+    titleImage.resize((int)(width * 0.7), (int)((width * 0.7) * (titleImageSize.y / titleImageSize.x)));
+    titleBar.resize((int)(width * 0.7), (int)((width * 0.7) * (titleBarSize.y / titleBarSize.x)));
   }
 
   void display() {

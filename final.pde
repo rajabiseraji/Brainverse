@@ -1,3 +1,6 @@
+import java.util.Vector;
+
+
 Torus torus;
 Slider slider;
 boolean interactionEnabled = false;
@@ -11,10 +14,7 @@ int currentScreen = 0; // 0 title screen, 1 choose auto/manual, 2 main app scree
 
 Moon moon;
 Ocean ocean;
-
 Vector<AppScreen> appScreens = new Vector<AppScreen>();
-
- 
 void setup() {
   size(768, 1024, P3D);
   img = loadImage("bg.png");

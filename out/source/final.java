@@ -3,6 +3,8 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import java.util.Vector; 
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
@@ -14,6 +16,9 @@ import java.io.IOException;
 
 public class Final extends PApplet {
 
+
+
+
 Torus torus;
 Slider slider;
 boolean interactionEnabled = false;
@@ -23,14 +28,14 @@ PFont firaSansBook;
 PFont firaSansExtraBold;
 Button autoButton, manualButton, scannerButton, backButton;
 Boolean automaticOrManual = true;
+int currentScreen = 0; // 0 title screen, 1 choose auto/manual, 2 main app screen manual, 3 main app screen auto
 
 Moon moon;
 Ocean ocean;
-
- 
+Vector<AppScreen> appScreens = new Vector<AppScreen>();
 public void setup() {
   
-  img = loadImage("NVsmall.png");
+  img = loadImage("bg.png");
   background(img);
   // background(#525252);
   torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
@@ -63,11 +68,17 @@ public void setup() {
 
   // firaSansBook = createFont("FiraSans-Book.otf", 16);
   // firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
+  TitleScreen t = new TitleScreen();
+  appScreens.add(t);
 }
 
 public void draw() {
   background(img);
-  sliderValue = slider.drawSlider();
+
+  // screen management
+  appScreens.get(currentScreen).display();
+
+  // sliderValue = slider.drawSlider();
   // torus.setDelta(sliderValue);
   // torus.updateShape(interactionEnabled);
   // Torus
@@ -78,8 +89,8 @@ public void draw() {
   // Moon
 
   // Ocean
-  ocean.setGamma(sliderValue);
-  ocean.updateShape();
+  // ocean.setGamma(sliderValue);
+  // ocean.updateShape();
 
   // autoButton.display();
   // manualButton.display();
@@ -113,6 +124,11 @@ public void keyPressed(){
 
 }
 
+public void changeScreen(int newScreenNumber) {
+  currentScreen = newScreenNumber;
+}
+
+
 // void mouseClicked(MouseEvent event) {
 //   autoButton.mouseClickHandler(event);
 // }
@@ -122,6 +138,9 @@ public void switchInteraction() {
     interactionEnabled = false;
   else 
     interactionEnabled = true;
+}
+abstract class AppScreen {
+    public abstract void display();
 }
 public class BrainAtom {
     private float mass = 0;
@@ -486,62 +505,6 @@ public class Ocean {
         // animate the points so that they move a little bit up and down to and from the center of the circle
     }
 
-    // void drawOuterCircle(int p) {
-    //     int k = 0;
-    //     float x = -sphereRadius;
-    //     float xStep = sphereRadius / xyzSteps;
-    //     while(x < sphereRadius) {
-    //         float noiseValue = noise(p * palinNoiseScale, p * palinNoiseScale);
-    //         // float step = (noiseValue - 0.5) * 10;
-    //         // float angle = TWO_PI * k / circleDivisions;
-    //         float x = (outerCircleRadius + step) * cos(angle);
-    //         float y = (outerCircleRadius + step) * sin(angle);
-    //         fill(#ffffff, noiseValue * 255);
-    //         stroke(#ffffff, 0);
-    //         ellipse(x, y, 2, 2);
-    //         x+=xStep;
-    //     }
-    // }
-
-    // void drawInnerCircle(int p) {
-    //     int k = 0;
-    //     while(k < circleDivisions) {
-    //         float noiseValue = noise(p * k * palinNoiseScale, p * k * palinNoiseScale);
-    //         float step = (noiseValue - 0.5) * 10;
-    //         float angle = TWO_PI * k / circleDivisions;
-    //         float x = (innerCircleRadius + step) * cos(angle);
-    //         float y = (innerCircleRadius + step) * sin(angle);
-    //         fill(#ffffff, noiseValue * 255);
-    //         stroke(#ffffff, 0);
-    //         ellipse(x, y, 2, 2);
-    //         k++;
-    //     }
-    // }
-
-    // public void increaseDelta() {
-    //     // increasing delta would increase the number of circles and increasing 
-    //     // the bigCircleRadius and decrease smallCircleRadius and also increase N!
-    //     if(numberOfCircle < 100)
-    //         numberOfCircle++;
-    //     if(bigCircleRadius < 300)
-    //         bigCircleRadius+=3;
-    //     if(miniCircleRadius > 5)
-    //         miniCircleRadius--;
-    //     if(N < 300)
-    //         N+=10;
-    // }
-
-    // public void decreaseDelta() {
-    //     // so basically do the opposite of what you do in the increase
-    //     if(numberOfCircle > 4)
-    //         numberOfCircle--;
-    //     if(bigCircleRadius > 10)
-    //         bigCircleRadius-=3;
-    //     if(miniCircleRadius < 100)
-    //         miniCircleRadius++;
-    //     if(N > 30)
-    //         N-=10;
-    // }
 
     public void setGamma(int newGammaValue) {
         this.gammaValue = newGammaValue;
@@ -629,6 +592,136 @@ public class Slider {
             s1.x = mouseX;
         } 
     }
+}
+public class Star {
+    public int xyzSteps = 18;
+    public float sphereRadius = 180; /// the max outer circle radius of the torus
+    public int gammaValue = 20; // again for now between 20 and 100
+    public int startColorValue = 0xff3371a3;
+    public int endColorValue = 0xffa4bad2;
+    public int currentColorValue = startColorValue;
+    public int step = 0x1;
+    public float palinNoiseScale = 0.002f;
+    public float palinNoiceValue = 0;
+    float vibrationStepSize = 10;
+    int p = 0;
+
+    PShape my_sphere;
+    ArrayList<PVector> vertices = new ArrayList<PVector>();
+    
+    public Star () {
+        /**
+        TODO: other inits necessary
+        */
+        // step = (endColorValue - startColorValue) / (numberOfCircle * N / 2);
+    }
+
+    public Star(int gammaValue,float palinNoiseScale, int xyzSteps, float sphereRadius) {
+        this.palinNoiseScale = palinNoiseScale;
+        this.gammaValue = gammaValue;
+        this.palinNoiseScale = palinNoiseScale;
+        this.xyzSteps = xyzSteps;
+        this.sphereRadius = sphereRadius;
+        // fill(0, 0, 0);
+        my_sphere = createShape(SPHERE, this.sphereRadius);
+        sphereDetail(120);
+    }
+
+    public void draw_sphere(){
+        shape(my_sphere);
+        my_sphere.setVisible(true);
+    }
+    
+    public void draw_points(int p){
+        getVertices(my_sphere, vertices);
+        for(int i=0; i < vertices.size(); i++){
+            float noiseValue = noise(p * i * palinNoiseScale, p * i * palinNoiseScale);
+            float step = (noiseValue - 0.5f) * vibrationStepSize;
+            PVector vertex = vertices.get(i);
+            float x = vertex.x;
+            float y = vertex.y;
+            float z = vertex.z;
+            PVector originalPoint = new PVector(x, y, z);
+            originalPoint.add(step, step, step);
+            pushMatrix();
+            translate(originalPoint.x, originalPoint.y, originalPoint.z);
+            noStroke();
+            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue));
+            // point(x, y, z);
+            ellipse(0, 0, 4, 4);
+            popMatrix();
+        }
+    }
+
+    public void drawStar(float x, float y, float radius1, float radius2, int npoints) {
+        float angle = TWO_PI / npoints;
+        float halfAngle = angle/2.0f;
+        beginShape();
+        for (float a = 0; a < TWO_PI; a += angle) {
+            float sx = x + cos(a) * radius2;
+            float sy = y + sin(a) * radius2;
+            vertex(sx, sy);
+            sx = x + cos(a+halfAngle) * radius1;
+            sy = y + sin(a+halfAngle) * radius1;
+            vertex(sx, sy);
+        }
+        endShape(CLOSE);
+    }
+    
+    public void getVertices(PShape shape, ArrayList<PVector> vertices){
+        for(int i = 0 ; i < shape.getVertexCount(); i++){
+            PVector vertex = shape.getVertex(i);
+            vertices.add(vertex);
+        }
+    }
+
+    public void updateShape() {
+        // create the outer circle with points
+        // pushMatrix();
+        // translate(width/2, height/2);
+        // drawSphere(p);
+        // popMatrix();
+        // p++;
+        sphereDetail(120);
+        pushMatrix();
+        translate(width/2, height/2);
+        // rotateZ(millis() * 0.0001 * TWO_PI);
+        // rotateY(millis() * 0.0001 * TWO_PI);
+        // draw_sphere();
+        draw_points(p);
+        vertices.clear();
+        popMatrix();
+        p++;
+        // create the inner circle with points
+        // animate the points so that they move a little bit up and down to and from the center of the circle
+    }
+
+
+    public void setGamma(int newGammaValue) {
+        this.gammaValue = newGammaValue;
+        sphereRadius = map(newGammaValue, 0, 100, 100, 200); // 0 -> 20 ... 1 up -> 1 up
+        palinNoiseScale = map(newGammaValue, 0, 100, 0.2f, 0.003f); // 30, 100
+        vibrationStepSize = map(newGammaValue, 0, 100, 0, 50); // 30, 100
+        my_sphere = createShape(SPHERE, this.sphereRadius);
+    }
+}
+public class TitleScreen extends AppScreen {
+  PImage titleImage, titleBar;
+  PVector titleImageSize, titleBarSize;
+  TitleScreen() {
+    titleImage = loadImage("NVtitle.png"); 
+    titleImageSize = new PVector(titleImage.width, titleImage.height);
+    titleBar = loadImage("titlebar.png");
+    titleBarSize = new PVector(titleBar.width, titleBar.height);
+
+    titleImage.resize((int)(width * 0.7f), (int)((width * 0.7f) * (titleImageSize.y / titleImageSize.x)));
+    titleBar.resize((int)(width * 0.7f), (int)((width * 0.7f) * (titleBarSize.y / titleBarSize.x)));
+  }
+
+  public void display() {
+    image(titleImage, (width - titleImageSize.x) / 2, 0.1f * height);
+    image(titleBar, (width - titleImageSize.x) / 2, 0.9f * height);
+  }
 }
 
 
@@ -756,7 +849,7 @@ public class Torus {
         N = (int)map(newDeltaValue, 0, 100, 5, 100); // 30, 100
     }
 }
-  public void settings() {  size(384, 512, P3D); }
+  public void settings() {  size(768, 1024, P3D); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "Final" };
     if (passedArgs != null) {
