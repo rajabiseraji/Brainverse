@@ -13,7 +13,7 @@ public class Ocean {
     float vibrationStepSize = 10;
     int p = 0;
 
-    int transparency = 1;
+    float transparency = 1;
     
 
     PShape my_sphere;
@@ -56,7 +56,7 @@ public class Ocean {
             pushMatrix();
             translate(originalPoint.x, originalPoint.y, originalPoint.z);
             noStroke();
-            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue), (int)(transparency * 255));
+            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue), transparency);
             // point(x, y, z);
             ellipse(0, 0, 4, 4);
             popMatrix();
@@ -70,13 +70,14 @@ public class Ocean {
         }
     }
 
-    void updateShape() {
+    void updateShape(float transparency) {
         // create the outer circle with points
         // pushMatrix();
         // translate(width/2, height/2);
         // drawSphere(p);
         // popMatrix();
         // p++;
+        this.transparency = transparency;
         sphereDetail(120);
         pushMatrix();
         translate(width/2, height/2);

@@ -386,7 +386,7 @@ public class Flower {
     float rotationSpeedDegPerSec = 0.5f;
     int p = 0;
 
-    int transparency = 1;
+    float transparency = 1;
 
     int alphaValue = 20;
 
@@ -403,7 +403,8 @@ public class Flower {
         this.numberOfStarPointsOffset = numberOfStarPointsOffset;
     }
 
-    public void display() {
+    public void display(float transparency) {
+        this.transparency = transparency;
         drawFlowers(p);
         p++;
     }
@@ -496,8 +497,8 @@ public class ManualScreen extends AppScreen{
         gammaSlider = new Slider(gammaSliderPosition, 20, "Gamma", 20, 100, new PVector(width - 140, 0));
         PVector tethaSliderPosition = new PVector(120, (height * 3 / 4) + 150);
         tethaSlider = new Slider(tethaSliderPosition, 20, "Tetha", 20, 100, new PVector(width - 140, 0));
-        PVector deltaSliderPosition = new PVector(120, (height * 3 / 4));
-        deltaSlider = new Slider(deltaSliderPosition, 20, "Delta", 20, 200, new PVector(width - 140, 0));
+        PVector deltaSliderPosition = new PVector(120, (height * 3 / 4) + 200);
+        deltaSlider = new Slider(deltaSliderPosition, 20, "Delta", 20, 100, new PVector(width - 140, 0));
         
         torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
         moon = new Moon(180 , 170, 10, 0.02f, 300);
@@ -533,19 +534,24 @@ public class ManualScreen extends AppScreen{
 
         if(dominantWave == 0) { // delta
             flower.setAlpha(alphaWave.waveValue);
-            flower.display();
+            flower.display(alphaWave.waveTransparency);
+            println("alphaWave.waveTransparency:"+alphaWave.waveTransparency);
         } else if(dominantWave == 1) {
             star.setBeta(betaWave.waveValue);
-            star.display();
+            star.display(betaWave.waveTransparency);
+            println("betaWave.waveTransparency:"+betaWave.waveTransparency);
         } else if(dominantWave == 2) {
             ocean.setGamma(gammaWave.waveValue);
-            ocean.updateShape();
+            ocean.updateShape(gammaWave.waveTransparency);
+            println("gammaWave.waveTransparency:"+gammaWave.waveTransparency);
         } else if(dominantWave == 3) {
             moon.setTetha(tethaWave.waveValue);
-            moon.updateShape();
+            moon.updateShape(tethaWave.waveTransparency);
+            println("tethaWave.waveTransparency:"+tethaWave.waveTransparency);
         } else if(dominantWave == 4) {
             torus.setDelta(deltaWave.waveValue);
-            torus.updateShape(interactionEnabled);
+            torus.updateShape(interactionEnabled, deltaWave.waveTransparency);
+            println("deltaWave.waveTransparency:"+deltaWave.waveTransparency);
         }
     }
 
@@ -573,10 +579,12 @@ public class ManualScreen extends AppScreen{
         Collections.sort(waves);
         dominantWave = waves.get(0).waveIndex;
 
-        // int difference = waves[0].waveValue - waves[1].waveValue;
-        // if(difference < 20) {
-
-        // }
+        
+        int difference = waves.get(0).waveValue - waves.get(1).waveValue;
+        if(difference < 10) {
+            waves.get(0).setTransparency(map(difference, 0, 10, 0.5f, 1));
+            waves.get(1).setTransparency(map(difference, 0, 10, 0.5f, 0));
+        }
     }
 
     public void mouseClickHandler(MouseEvent event) {
@@ -615,7 +623,7 @@ public class Moon {
     public float palinNoiceValue = 0;
     int p = 0;
     
-    int transparency = 1;
+    float transparency = 1;
 
     public Moon () {
         /**
@@ -633,8 +641,9 @@ public class Moon {
 
     }
 
-    public void updateShape() {
+    public void updateShape(float transparency) {
         // create the outer circle with points
+        this.transparency = transparency;
         pushMatrix();
         translate(width/2, height/2);
         drawOuterCircle(p);
@@ -723,7 +732,7 @@ public class Ocean {
     float vibrationStepSize = 10;
     int p = 0;
 
-    int transparency = 1;
+    float transparency = 1;
     
 
     PShape my_sphere;
@@ -780,13 +789,14 @@ public class Ocean {
         }
     }
 
-    public void updateShape() {
+    public void updateShape(float transparency) {
         // create the outer circle with points
         // pushMatrix();
         // translate(width/2, height/2);
         // drawSphere(p);
         // popMatrix();
         // p++;
+        this.transparency = transparency;
         sphereDetail(120);
         pushMatrix();
         translate(width/2, height/2);
@@ -900,7 +910,7 @@ public class Star {
     int betaValue = 20;
     float rotationSpeedDegPerSec = 0.5f;
 
-    int transparency = 1;
+    float transparency = 1;
 
     public float palinNoiseScale = 0.002f;
     public float palinNoiceValue = 0;
@@ -916,7 +926,8 @@ public class Star {
         this.shapeRepetitionNumber = shapeRepetitionNumber;
     }
 
-    public void display() {
+    public void display(float transparency) {
+        this.transparency = transparency;
         pushMatrix();
         translate(position.x, position.y);
         rotate(radians(millis() * rotationSpeedDegPerSec/100));
@@ -1034,7 +1045,7 @@ public class Torus {
     int N=20; // is the number of points in the big circle's circumference 
     // if the N is high it means the number of mini circles are higher!
 
-    int transparency = 1;
+    float transparency = 1;
     
     public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius) {
         this.numberOfCircle = numberOfCircle;
@@ -1063,7 +1074,8 @@ public class Torus {
         return this.miniCircleRadius;
     }
 
-    public void updateShape(boolean isInteractionEnabled) {
+    public void updateShape(boolean isInteractionEnabled, float transparency) {
+        this.transparency = transparency;
         if(isInteractionEnabled) {
             lastMouseX = mouseX;
             lastMouseY = mouseY;

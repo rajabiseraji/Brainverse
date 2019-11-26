@@ -8,7 +8,7 @@ public class Flower {
     float rotationSpeedDegPerSec = 0.5;
     int p = 0;
 
-    int transparency = 1;
+    float transparency = 1;
 
     int alphaValue = 20;
 
@@ -25,7 +25,8 @@ public class Flower {
         this.numberOfStarPointsOffset = numberOfStarPointsOffset;
     }
 
-    void display() {
+    void display(float transparency) {
+        this.transparency = transparency;
         drawFlowers(p);
         p++;
     }
@@ -42,7 +43,7 @@ public class Flower {
 
     void drawFlower(float radius1, float radius2, int npoints) {
         noFill();
-        stroke(#ffffff, (int)(transparency * 255));
+        stroke(#ffffff, transparency);
         pushMatrix();
             translate(position.x, position.y);
             float angle = TWO_PI / npoints;

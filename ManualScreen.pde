@@ -79,19 +79,24 @@ public class ManualScreen extends AppScreen{
 
         if(dominantWave == 0) { // delta
             flower.setAlpha(alphaWave.waveValue);
-            flower.display();
+            flower.display(alphaWave.waveTransparency);
+            println("alphaWave.waveTransparency:"+alphaWave.waveTransparency);
         } else if(dominantWave == 1) {
             star.setBeta(betaWave.waveValue);
-            star.display();
+            star.display(betaWave.waveTransparency);
+            println("betaWave.waveTransparency:"+betaWave.waveTransparency);
         } else if(dominantWave == 2) {
             ocean.setGamma(gammaWave.waveValue);
-            ocean.updateShape();
+            ocean.updateShape(gammaWave.waveTransparency);
+            println("gammaWave.waveTransparency:"+gammaWave.waveTransparency);
         } else if(dominantWave == 3) {
             moon.setTetha(tethaWave.waveValue);
-            moon.updateShape();
+            moon.updateShape(tethaWave.waveTransparency);
+            println("tethaWave.waveTransparency:"+tethaWave.waveTransparency);
         } else if(dominantWave == 4) {
             torus.setDelta(deltaWave.waveValue);
-            torus.updateShape(interactionEnabled);
+            torus.updateShape(interactionEnabled, deltaWave.waveTransparency);
+            println("deltaWave.waveTransparency:"+deltaWave.waveTransparency);
         }
     }
 
@@ -119,10 +124,12 @@ public class ManualScreen extends AppScreen{
         Collections.sort(waves);
         dominantWave = waves.get(0).waveIndex;
 
-        // int difference = waves[0].waveValue - waves[1].waveValue;
-        // if(difference < 20) {
-
-        // }
+        
+        int difference = waves.get(0).waveValue - waves.get(1).waveValue;
+        if(difference < 10) {
+            waves.get(0).setTransparency(map(difference, 0, 10, 0.5, 1));
+            waves.get(1).setTransparency(map(difference, 0, 10, 0.5, 0));
+        }
     }
 
     void mouseClickHandler(MouseEvent event) {

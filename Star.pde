@@ -9,7 +9,7 @@ public class Star {
     int betaValue = 20;
     float rotationSpeedDegPerSec = 0.5;
 
-    int transparency = 1;
+    float transparency = 1;
 
     public float palinNoiseScale = 0.002;
     public float palinNoiceValue = 0;
@@ -25,7 +25,8 @@ public class Star {
         this.shapeRepetitionNumber = shapeRepetitionNumber;
     }
 
-    void display() {
+    void display(float transparency) {
+        this.transparency = transparency;
         pushMatrix();
         translate(position.x, position.y);
         rotate(radians(millis() * rotationSpeedDegPerSec/100));
@@ -76,7 +77,7 @@ public class Star {
             PVector originalPoint = new PVector(x, y);
             PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
-            fill(#ffffff, (int)(transparency * 255));
+            fill(#ffffff, transparency);
             ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }
@@ -89,7 +90,7 @@ public class Star {
             PVector originalPoint = new PVector(x, y);
             PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
-            fill(#ffffff, (int)(transparency * 255));
+            fill(#ffffff, transparency);
             ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }

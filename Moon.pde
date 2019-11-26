@@ -13,7 +13,7 @@ public class Moon {
     public float palinNoiceValue = 0;
     int p = 0;
     
-    int transparency = 1;
+    float transparency = 1;
 
     public Moon () {
         /**
@@ -31,8 +31,9 @@ public class Moon {
 
     }
 
-    void updateShape() {
+    void updateShape(float transparency) {
         // create the outer circle with points
+        this.transparency = transparency;
         pushMatrix();
         translate(width/2, height/2);
         drawOuterCircle(p);
@@ -51,7 +52,7 @@ public class Moon {
             float angle = TWO_PI * k / circleDivisions;
             float x = (outerCircleRadius + step) * cos(angle);
             float y = (outerCircleRadius + step) * sin(angle);
-            fill(#ffffff, transparency * noiseValue * 255);
+            fill(#ffffff, transparency * noiseValue);
             stroke(#ffffff, 0);
             ellipse(x, y, 2, 2);
             k++;
@@ -66,7 +67,7 @@ public class Moon {
             float angle = TWO_PI * k / circleDivisions;
             float x = (innerCircleRadius + step) * cos(angle);
             float y = (innerCircleRadius + step) * sin(angle);
-            fill(#ffffff, transparency * noiseValue * 255);
+            fill(#ffffff, transparency * noiseValue);
             stroke(#ffffff, 0);
             ellipse(x, y, 2, 2);
             k++;
