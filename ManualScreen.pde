@@ -38,7 +38,7 @@ public class ManualScreen extends AppScreen{
         ocean = new Ocean(20, 0.002, 100, 150);
         star = new Star(new PVector(width / 2, 300), 180, 15, 10, 4, 10);
         // PVector position, float edgeLength, int angleDivision, int numberOfEdgePoints, float pointSize,  int shapeRepetitionNumber
-        flower = new Flower(new PVector(width /2, 300), 100, 5, 0.5, 10, 7, 3);
+        flower = new Flower(new PVector(width /2, 300), 170, 5, 0.5, 10, 7, 3);
         // Flower (PVector position, float radius, int numberOfFlowers, float rotationSpeedDegPerSec, float radiusOffest, int numberOfStarPoints, int numberOfStarPointsOffset) 
         // for now we have Delta -> Torus, Tetha -> moon, Gamma -> ocean
 
@@ -79,7 +79,7 @@ public class ManualScreen extends AppScreen{
             star.setBeta(betaSliderValue);
             star.display();
         } else if(dominantWave == 4) {
-            star.setAlpha(alphaSliderValue);
+            flower.setAlpha(alphaSliderValue);
             flower.display();
         }
     }

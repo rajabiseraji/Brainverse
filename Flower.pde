@@ -63,11 +63,12 @@ public class Flower {
 
     void setAlpha(int newAlphaValue) {
         this.alphaValue = newAlphaValue;
-        this.radius = map(newAlphaValue, 0, 100, 30, 160);
-        this.numberOfFlowers = map(newAlphaValue, 0, 100, 5, 30);
+        // this.radius = map(newAlphaValue, 0, 100, 30, 160);
+        this.numberOfFlowers = (int)map(newAlphaValue, 0, 100, 5, 30);
         this.rotationSpeedDegPerSec = map(newAlphaValue, 0, 100, 0.3, 3);
-        this.radiusOffest = map(newAlphaValue, 0, 100, 10, 30);
-        this.numberOfStarPoints = map(newAlphaValue, 0, 100, 5, 13);
+        this.radiusOffest = map(newAlphaValue, 0, 100, 10, 50);
+        this.numberOfStarPoints = (int)map(newAlphaValue, 0, 100, 5, 30);
+        this.numberOfStarPointsOffset = (int)map(newAlphaValue, 0, 100, 2, 20);
     }
 
 }

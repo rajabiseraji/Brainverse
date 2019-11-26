@@ -385,6 +385,8 @@ public class Flower {
     float rotationSpeedDegPerSec = 0.5f;
     int p = 0;
 
+    int alphaValue = 20;
+
     public float palinNoiseScale = 0.002f;
     public float palinNoiceValue = 0;
 
@@ -436,6 +438,16 @@ public class Flower {
         popMatrix();
     }
 
+    public void setAlpha(int newAlphaValue) {
+        this.alphaValue = newAlphaValue;
+        // this.radius = map(newAlphaValue, 0, 100, 30, 160);
+        this.numberOfFlowers = (int)map(newAlphaValue, 0, 100, 5, 30);
+        this.rotationSpeedDegPerSec = map(newAlphaValue, 0, 100, 0.3f, 3);
+        this.radiusOffest = map(newAlphaValue, 0, 100, 10, 50);
+        this.numberOfStarPoints = (int)map(newAlphaValue, 0, 100, 5, 30);
+        this.numberOfStarPointsOffset = (int)map(newAlphaValue, 0, 100, 2, 20);
+    }
+
 }
 public class ManualScreen extends AppScreen{
     Torus torus;
@@ -477,7 +489,7 @@ public class ManualScreen extends AppScreen{
         ocean = new Ocean(20, 0.002f, 100, 150);
         star = new Star(new PVector(width / 2, 300), 180, 15, 10, 4, 10);
         // PVector position, float edgeLength, int angleDivision, int numberOfEdgePoints, float pointSize,  int shapeRepetitionNumber
-        flower = new Flower(new PVector(width /2, 300), 100, 5, 0.5f, 10, 7, 3);
+        flower = new Flower(new PVector(width /2, 300), 170, 5, 0.5f, 10, 7, 3);
         // Flower (PVector position, float radius, int numberOfFlowers, float rotationSpeedDegPerSec, float radiusOffest, int numberOfStarPoints, int numberOfStarPointsOffset) 
         // for now we have Delta -> Torus, Tetha -> moon, Gamma -> ocean
 
@@ -518,7 +530,7 @@ public class ManualScreen extends AppScreen{
             star.setBeta(betaSliderValue);
             star.display();
         } else if(dominantWave == 4) {
-            // star.setBeta(betaSliderValue);
+            flower.setAlpha(alphaSliderValue);
             flower.display();
         }
     }
