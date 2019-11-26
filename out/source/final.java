@@ -118,18 +118,11 @@ public void mouseMoved() {
   }
 }
 
-public void keyPressed(){
-    if(key == CODED) { 
-        if (keyCode == UP) { 
-            torus.increaseDelta();
-        } 
-        else if (keyCode == DOWN) {
-            torus.decreaseDelta();
-        } 
-    } else if(key == 'i') {
-    switchInteraction();
+public void keyPressed(KeyEvent event){
+  if(currentScreen == 3 || currentScreen == 2) {
+    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+    m.keyHandler(event);
   }
-
 }
 
 public void changeScreen(int newScreenNumber) {
@@ -147,12 +140,6 @@ public void mouseClicked(MouseEvent event) {
   }
 }
 
-public void switchInteraction() {
-  if(interactionEnabled)
-    interactionEnabled = false;
-  else 
-    interactionEnabled = true;
-}
 abstract class AppScreen {
     public abstract void display();
 }
@@ -398,6 +385,7 @@ public class ManualScreen extends AppScreen{
     int deltaSliderValue = 20;
     int tethaSliderValue = 20;
     int gammaSliderValue = 20;
+    int dominantWave = 0; // 0 delta, 1 tetha, 2 gamma
 
     Button backButton;
 
@@ -428,18 +416,24 @@ public class ManualScreen extends AppScreen{
         deltaSliderValue = deltaSlider.drawSlider();
         tethaSliderValue = tethaSlider.drawSlider();
         gammaSliderValue = gammaSlider.drawSlider();
-        // torus.setDelta(sliderValue);
-        // torus.updateShape(interactionEnabled);
-        // Torus
-        
-        // moon.setTetha(sliderValue);
-        // moon.updateShape();
-        
-        // Moon
 
-        // Ocean
-        // ocean.setGamma(sliderValue);
-        // ocean.updateShape();
+        shapeManager();   
+    }
+
+    public void shapeManager() {
+        findDominantWave();
+        
+        if(dominantWave == 0) { // delta
+            torus.setDelta(deltaSliderValue);
+            torus.updateShape(interactionEnabled);
+        } else if(dominantWave == 1) {
+            // tetha
+            moon.setTetha(tethaSliderValue);
+            moon.updateShape();
+        } else if(dominantWave == 2) {
+            ocean.setGamma(gammaSliderValue);
+            ocean.updateShape();
+        }
     }
 
     public void mouseDragHandler(MouseEvent event) {
@@ -457,8 +451,33 @@ public class ManualScreen extends AppScreen{
         } 
     }
 
+    public void findDominantWave() {
+        if(deltaSliderValue > tethaSliderValue && deltaSliderValue > gammaSliderValue)
+            dominantWave = 0;
+        else if(tethaSliderValue > deltaSliderValue && tethaSliderValue > gammaSliderValue)
+            dominantWave = 1;
+        else if(gammaSliderValue > deltaSliderValue && gammaSliderValue > tethaSliderValue)
+            dominantWave = 2;
+        else 
+            dominantWave = 0;
+    }
+
     public void mouseClickHandler(MouseEvent event) {
         backButton.mouseClickHandler(event);
+    }
+
+    public void keyHandler(KeyEvent event) {
+        if(key == 'i') {
+            switchInteraction();
+        }
+    }
+
+    
+    public void switchInteraction() {
+        if(interactionEnabled)
+            interactionEnabled = false;
+        else 
+            interactionEnabled = true;
     }
 
 }

@@ -8,6 +8,7 @@ public class ManualScreen extends AppScreen{
     int deltaSliderValue = 20;
     int tethaSliderValue = 20;
     int gammaSliderValue = 20;
+    int dominantWave = 0; // 0 delta, 1 tetha, 2 gamma
 
     Button backButton;
 
@@ -38,18 +39,24 @@ public class ManualScreen extends AppScreen{
         deltaSliderValue = deltaSlider.drawSlider();
         tethaSliderValue = tethaSlider.drawSlider();
         gammaSliderValue = gammaSlider.drawSlider();
-        // torus.setDelta(sliderValue);
-        // torus.updateShape(interactionEnabled);
-        // Torus
-        
-        // moon.setTetha(sliderValue);
-        // moon.updateShape();
-        
-        // Moon
 
-        // Ocean
-        // ocean.setGamma(sliderValue);
-        // ocean.updateShape();
+        shapeManager();   
+    }
+
+    void shapeManager() {
+        findDominantWave();
+        
+        if(dominantWave == 0) { // delta
+            torus.setDelta(deltaSliderValue);
+            torus.updateShape(interactionEnabled);
+        } else if(dominantWave == 1) {
+            // tetha
+            moon.setTetha(tethaSliderValue);
+            moon.updateShape();
+        } else if(dominantWave == 2) {
+            ocean.setGamma(gammaSliderValue);
+            ocean.updateShape();
+        }
     }
 
     void mouseDragHandler(MouseEvent event) {
@@ -67,8 +74,33 @@ public class ManualScreen extends AppScreen{
         } 
     }
 
+    void findDominantWave() {
+        if(deltaSliderValue > tethaSliderValue && deltaSliderValue > gammaSliderValue)
+            dominantWave = 0;
+        else if(tethaSliderValue > deltaSliderValue && tethaSliderValue > gammaSliderValue)
+            dominantWave = 1;
+        else if(gammaSliderValue > deltaSliderValue && gammaSliderValue > tethaSliderValue)
+            dominantWave = 2;
+        else 
+            dominantWave = 0;
+    }
+
     void mouseClickHandler(MouseEvent event) {
         backButton.mouseClickHandler(event);
+    }
+
+    void keyHandler(KeyEvent event) {
+        if(key == 'i') {
+            switchInteraction();
+        }
+    }
+
+    
+    void switchInteraction() {
+        if(interactionEnabled)
+            interactionEnabled = false;
+        else 
+            interactionEnabled = true;
     }
 
 }

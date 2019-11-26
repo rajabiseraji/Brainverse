@@ -100,18 +100,11 @@ void mouseMoved() {
   }
 }
 
-void keyPressed(){
-    if(key == CODED) { 
-        if (keyCode == UP) { 
-            torus.increaseDelta();
-        } 
-        else if (keyCode == DOWN) {
-            torus.decreaseDelta();
-        } 
-    } else if(key == 'i') {
-    switchInteraction();
+void keyPressed(KeyEvent event){
+  if(currentScreen == 3 || currentScreen == 2) {
+    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+    m.keyHandler(event);
   }
-
 }
 
 void changeScreen(int newScreenNumber) {
@@ -129,9 +122,3 @@ void mouseClicked(MouseEvent event) {
   }
 }
 
-void switchInteraction() {
-  if(interactionEnabled)
-    interactionEnabled = false;
-  else 
-    interactionEnabled = true;
-}
