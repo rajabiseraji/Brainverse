@@ -32,9 +32,16 @@ public class ManualScreen extends AppScreen{
         torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
         moon = new Moon(180 , 170, 10, 0.02, 300);
         ocean = new Ocean(20, 0.002, 100, 150);
-        star = new Star(new PVector(width / 2, 300), 120, 20, 40, 2, 10);
+        star = new Star(new PVector(width / 2, 300), 180, 15, 10, 4, 10);
         // PVector position, float edgeLength, int angleDivision, int numberOfEdgePoints, float pointSize,  int shapeRepetitionNumber
         // for now we have Delta -> Torus, Tetha -> moon, Gamma -> ocean
+
+
+        /////////////////////////////////////////////////////
+
+        // IDEA OF FACDING AND HAVING SLIDER VALUES MONITORED FOR FADING INSTEAD OF MORPHING FOR NOW
+
+        ////////////////////////////////////////////////////
     }
 
     void display() {
@@ -62,6 +69,7 @@ public class ManualScreen extends AppScreen{
             ocean.setGamma(gammaSliderValue);
             ocean.updateShape();
         } else if(dominantWave == 3) {
+            star.setBeta(betaSliderValue);
             star.display();
         }
     }

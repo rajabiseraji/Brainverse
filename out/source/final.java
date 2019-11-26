@@ -409,9 +409,16 @@ public class ManualScreen extends AppScreen{
         torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
         moon = new Moon(180 , 170, 10, 0.02f, 300);
         ocean = new Ocean(20, 0.002f, 100, 150);
-        star = new Star(new PVector(width / 2, 300), 120, 20, 40, 2, 10);
+        star = new Star(new PVector(width / 2, 300), 180, 15, 10, 4, 10);
         // PVector position, float edgeLength, int angleDivision, int numberOfEdgePoints, float pointSize,  int shapeRepetitionNumber
         // for now we have Delta -> Torus, Tetha -> moon, Gamma -> ocean
+
+
+        /////////////////////////////////////////////////////
+
+        // IDEA OF FACDING AND HAVING SLIDER VALUES MONITORED FOR FADING INSTEAD OF MORPHING FOR NOW
+
+        ////////////////////////////////////////////////////
     }
 
     public void display() {
@@ -439,6 +446,7 @@ public class ManualScreen extends AppScreen{
             ocean.setGamma(gammaSliderValue);
             ocean.updateShape();
         } else if(dominantWave == 3) {
+            star.setBeta(betaSliderValue);
             star.display();
         }
     }
@@ -784,6 +792,14 @@ public class Star {
     float pointSize = 2;
     int shapeRepetitionNumber = 10;
 
+    int betaValue = 20;
+    float rotationSpeedDegPerSec = 0.5f;
+
+    public float palinNoiseScale = 0.002f;
+    public float palinNoiceValue = 0;
+    float vibrationStepSize = 20;
+    int p = 0;
+
     Star(PVector position, float edgeLength, int angleDivision, int numberOfEdgePoints, float pointSize, int shapeRepetitionNumber) {
         this.position = position;
         this.edgeLength = edgeLength;
@@ -794,22 +810,31 @@ public class Star {
     }
 
     public void display() {
+        pushMatrix();
+        translate(position.x, position.y);
+        rotate(radians(millis() * rotationSpeedDegPerSec/100));
+        drawStars(p);
+        popMatrix();
+        p++;
+    }
+
+    public void drawStars(int p) {
         for (int i = 0; i < shapeRepetitionNumber; i++) {
             float step =  TWO_PI / angleDivision;
             float angle = i * (PI/10);
             while(angle < TWO_PI + i * (PI/10)) {
                 pushMatrix();
-                translate(position.x, position.y);
+                // translate(position.x, position.y);
                 scale(0.9f + 0.05f*i);
                 rotate(angle);
-                drawRoundedTrianlge();
+                drawRoundedTrianlge(p);
                 popMatrix();
                 angle += step;
             }
         }
     }
 
-    public void drawRoundedTrianlge() {
+    public void drawRoundedTrianlge(int p) {
         // noFill();
         stroke(0xffffffff);
         shapeMode(CENTER);
@@ -830,20 +855,41 @@ public class Star {
         while(i < numberOfEdgePoints) { // first edge
             x+= step * cos(radians(360-45));
             y+= step * sin(radians(360-45));
+            float noiseValue = noise(p * i * palinNoiseScale, p * i * palinNoiseScale);
+            float s = (noiseValue - 0.5f) * vibrationStepSize;
+            PVector originalPoint = new PVector(x, y);
+            PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
             fill(0xffffffff);
-            ellipse(x, y, pointSize, pointSize);
+            ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }
         i = 0;
         while(i < numberOfEdgePoints) { // first edge
             x-= step;
             // vertex(x , y);
+            float noiseValue = noise(p * i * palinNoiseScale, p * i * palinNoiseScale);
+            float s = (noiseValue - 0.5f) * vibrationStepSize;
+            PVector originalPoint = new PVector(x, y);
+            PVector pointWithVibration = originalPoint.add(s, s);
+            // vertex(x , y);
             fill(0xffffffff);
-            ellipse(x, y, pointSize, pointSize);
+            ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }
         endShape(CLOSE);
+    }
+
+    public void setBeta(int newBetaValue) {
+        this.betaValue = newBetaValue;
+        numberOfEdgePoints = (int)map(newBetaValue, 0, 100, 2, 15); // 0 -> 20 ... 1 up -> 1 up
+        // edgeLength = map(newBetaValue, 0, 100, 60, 200); // 0 -> 20 ... 1 up -> 1 up
+        // angleDivision = (int)map(newBetaValue, 0, 100, 4, 15); // 0 -> 20 ... 1 up -> 1 up
+        // pointSize = map(newBetaValue, 0, 100, 1, 4); // 0 -> 20 ... 1 up -> 1 up
+        shapeRepetitionNumber = (int)map(newBetaValue, 0, 100, 5, 10); // 0 -> 20 ... 1 up -> 1 up
+        palinNoiseScale = map(newBetaValue, 0, 100, 0.002f, 0.02f); // 30, 100
+        vibrationStepSize = map(newBetaValue, 0, 100, 2, 5); // 30, 100
+        rotationSpeedDegPerSec = map(newBetaValue, 0, 100, 0.5f, 3); // 30, 100
     }
 }
 public class TitleScreen extends AppScreen {
