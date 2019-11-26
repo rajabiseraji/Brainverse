@@ -1,10 +1,5 @@
 public class Button {
 
-    // enum Type {
-    //     IMAGE,
-    //     TEXT
-    // }
-
     PVector position;
     PVector size;
     PVector buttonImageSize;
@@ -44,6 +39,11 @@ public class Button {
             this.currentFont = firaSansExtraBold;
         else
             this.currentFont = firaSansBook;
+    }
+
+    void deactivateButton() {
+        this.active = false;
+        this.currentFont = firaSansBook;
     }
 
     void display() {

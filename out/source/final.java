@@ -142,9 +142,12 @@ public void changeScreen(int newScreenNumber) {
 }
 
 
-// void mouseClicked(MouseEvent event) {
-//   autoButton.mouseClickHandler(event);
-// }
+public void mouseClicked(MouseEvent event) {
+  if(currentScreen == 1) {
+    ChooseScreen chooseScreen = (ChooseScreen)appScreens.get(1);
+    chooseScreen.mouseClickHandler(event);
+  }
+}
 
 public void switchInteraction() {
   if(interactionEnabled)
@@ -228,11 +231,6 @@ public class BrainAtom {
 }
 public class Button {
 
-    // enum Type {
-    //     IMAGE,
-    //     TEXT
-    // }
-
     PVector position;
     PVector size;
     PVector buttonImageSize;
@@ -272,6 +270,11 @@ public class Button {
             this.currentFont = firaSansExtraBold;
         else
             this.currentFont = firaSansBook;
+    }
+
+    public void deactivateButton() {
+        this.active = false;
+        this.currentFont = firaSansBook;
     }
 
     public void display() {
@@ -327,6 +330,8 @@ public class ChooseScreen extends AppScreen {
   PFont firaSansExtraBold;
   Button autoButton, manualButton, scannerButton, backButton;
   Boolean automaticOrManual = true;
+  boolean lastAutoButtonState = false;
+  boolean lastManualButtonState = false;
 
   ChooseScreen() {
     PVector buttonSize = new PVector(width / 2 - 10, width / 2 - 10);
@@ -359,6 +364,19 @@ public class ChooseScreen extends AppScreen {
     manualButton.display();
     scannerButton.display();
     backButton.display();
+  }
+
+  public void mouseClickHandler(MouseEvent event) {
+    lastAutoButtonState = autoButton.active;
+    lastManualButtonState = manualButton.active;
+
+    autoButton.mouseClickHandler(event);
+    manualButton.mouseClickHandler(event);
+
+    if(lastAutoButtonState && manualButton.active)
+      autoButton.deactivateButton();
+    else if(lastManualButtonState && autoButton.active)
+      manualButton.deactivateButton();
   }
 
 }

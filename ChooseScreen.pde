@@ -3,6 +3,9 @@ public class ChooseScreen extends AppScreen {
   PFont firaSansExtraBold;
   Button autoButton, manualButton, scannerButton, backButton;
   Boolean automaticOrManual = true;
+  boolean lastAutoButtonState = false;
+  boolean lastManualButtonState = false;
+  boolean startScanning = false;
 
   ChooseScreen() {
     PVector buttonSize = new PVector(width / 2 - 10, width / 2 - 10);
@@ -22,8 +25,8 @@ public class ChooseScreen extends AppScreen {
     PImage back = loadImage("back.png", "png");
     autoButton = new Button(buttonSize, buttonPosition, museHeadset, firstButtonImageSize, "Automatic", automaticOrManual);
     manualButton = new Button(buttonSize, manualButtonPosition, menuSlider, manualButtonImageSize, "Manual", !automaticOrManual);
-    scannerButton = new Button(scannerButtonImageSize, scannerButtonPosition, scanner, scannerButtonImageSize, "", !automaticOrManual);
-    backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", !automaticOrManual);
+    scannerButton = new Button(scannerButtonImageSize, scannerButtonPosition, scanner, scannerButtonImageSize, "", false);
+    backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", false);
 
 
     firaSansBook = createFont("FiraSans-Book.otf", 16);
@@ -35,6 +38,26 @@ public class ChooseScreen extends AppScreen {
     manualButton.display();
     scannerButton.display();
     backButton.display();
+  }
+
+  void mouseClickHandler(MouseEvent event) {
+    scannerButton.mouseClickHandler(event);
+    if(scannerButton.active)
+      startScanning = true;
+
+    lastAutoButtonState = autoButton.active;
+    lastManualButtonState = manualButton.active;
+
+    autoButton.mouseClickHandler(event);
+    manualButton.mouseClickHandler(event);
+
+    if(lastAutoButtonState && manualButton.active)
+      autoButton.deactivateButton();
+    else if(lastManualButtonState && autoButton.active)
+      manualButton.deactivateButton();
+
+    automaticOrManual = autoButton.active ? true : false;
+    
   }
 
 }

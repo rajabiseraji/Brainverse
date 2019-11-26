@@ -8,8 +8,6 @@ int sliderValue = 20;
 PImage img;
 PFont firaSansBook;
 PFont firaSansExtraBold;
-Button autoButton, manualButton, scannerButton, backButton;
-Boolean automaticOrManual = true;
 
 int currentScreen = 0; // 0 title screen, 1 choose auto/manual, 2 main app screen manual, 3 main app screen auto
 int elapsedTime = 0; 
@@ -28,27 +26,6 @@ void setup() {
 
   moon = new Moon(180 , 170, 10, 0.02, 300);
   ocean = new Ocean(20, 0.002, 100, 150);
-
-  // PVector buttonSize = new PVector(width / 2 - 10, width / 2 - 10);
-  // PVector buttonPosition = new PVector(5, (height - buttonSize.y) / 2);
-  // PVector manualButtonPosition = new PVector(buttonSize.x + 10, buttonPosition.y);
-  // PVector firstButtonImageSize = new PVector(buttonSize.x * 2 / 3, buttonSize.x * 2 / 3);
-  // PVector manualButtonImageSize = new PVector(buttonSize.x * 0.8, buttonSize.y * 0.8);
-  // PVector backButtonImageSize = new PVector(width/15,height/20);
-  // PVector backButtonPosition = new PVector(20, height-40);
-  // PVector scannerButtonImageSize = new PVector(1043/8, 560/8);
-  // PVector scannerButtonPosition = new PVector((width-scannerButtonImageSize.x)/2, (height-scannerButtonImageSize.y)-40);
-  //1043 × 560 scanner
-
-  // PImage museHeadset = loadImage("headset.png", "png");
-  // PImage menuSlider = loadImage("slider.png", "png");
-  // PImage scanner = loadImage("scanner.png", "png");
-  // PImage back = loadImage("back.png", "png");
-  // // autoButton = new Button(buttonSize, buttonPosition, museHeadset, firstButtonImageSize, "Automatic", automaticOrManual);
-  // manualButton = new Button(buttonSize, manualButtonPosition, menuSlider, manualButtonImageSize, "Manual", !automaticOrManual);
-  // scannerButton = new Button(scannerButtonImageSize, scannerButtonPosition, scanner, scannerButtonImageSize, "", !automaticOrManual);
-  // backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", !automaticOrManual);
-
 
   // firaSansBook = createFont("FiraSans-Book.otf", 16);
   // firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
@@ -79,10 +56,6 @@ void draw() {
   // ocean.setGamma(sliderValue);
   // ocean.updateShape();
 
-  // autoButton.display();
-  // manualButton.display();
-  // scannerButton.display();
-  // backButton.display();
 }
 
 void screenManager() {
@@ -90,8 +63,16 @@ void screenManager() {
     elapsedTime = millis();
     if(elapsedTime > 10000)
       currentScreen++;
+  } else if(currentScreen == 1) {
+    ChooseScreen chooseScreen = (ChooseScreen)appScreens.get(1);
+    if(chooseScreen.startScanning) {
+      elapsedTime = millis();
+      if(elapsedTime > 2000)
+        currentScreen = chooseScreen.automaticOrManual ? 2 : 3;
+    }
   }
 }
+
 
 void mouseDragged() {
   // println("I'm dragged");
@@ -124,9 +105,12 @@ void changeScreen(int newScreenNumber) {
 }
 
 
-// void mouseClicked(MouseEvent event) {
-//   autoButton.mouseClickHandler(event);
-// }
+void mouseClicked(MouseEvent event) {
+  if(currentScreen == 1) {
+    ChooseScreen chooseScreen = (ChooseScreen)appScreens.get(1);
+    chooseScreen.mouseClickHandler(event);
+  }
+}
 
 void switchInteraction() {
   if(interactionEnabled)
