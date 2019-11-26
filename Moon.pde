@@ -96,11 +96,11 @@ public class Moon {
     //         N-=10;
     // }
 
-    // public void setDelta(int newDeltaValue) {
-    //     this.deltaValue = newDeltaValue;
-    //     numberOfCircle = (int)map(newDeltaValue, 0, 100, 5, 99); // 0 -> 20 ... 1 up -> 1 up
-    //     bigCircleRadius = map(newDeltaValue, 0, 100, 11, 180);
-    //     miniCircleRadius = map(newDeltaValue, 0, 100, 100, 5); 
-    //     N = (int)map(newDeltaValue, 0, 100, 5, 100); // 30, 100
-    // }
+    public void setTetha(int newTethaValue) {
+        this.tethaValue = newTethaValue;
+        circleDivisions = (int)map(newTethaValue, 0, 100, 100, 500); // 0 -> 20 ... 1 up -> 1 up
+        outerCircleRadius = map(newTethaValue, 0, 100, 40, 200);
+        innerCircleRadius = map(newTethaValue, 0, 100, 30, 190); 
+        palinNoiseScale = map(newTethaValue, 0, 100, 0.2, 0.003); // 30, 100
+    }
 }

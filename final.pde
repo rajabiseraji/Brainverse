@@ -49,11 +49,11 @@ void setup() {
 
 void draw() {
   background(img);
-  // sliderValue = slider.drawSlider();
+  sliderValue = slider.drawSlider();
   // torus.setDelta(sliderValue);
   // torus.updateShape(interactionEnabled);
   // Torus
-
+  moon.setTetha(sliderValue);
   moon.updateShape();
 
   // Moon
