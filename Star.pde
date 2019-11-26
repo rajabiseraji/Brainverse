@@ -8,44 +8,53 @@ public class Star {
     }
 
     void display() {
-        drawRoundedTrianlge();
+        int k = 10;
+        float step =  TWO_PI / k;
+        float angle = 0;
+        while(angle < TWO_PI) {
+            pushMatrix();
+            translate(position.x, position.y);
+            rotate(angle);
+            drawRoundedTrianlge();
+            popMatrix();
+            angle += step;
+        }
     }
 
     void drawRoundedTrianlge() {
         noFill();
-        pushMatrix();
-            translate(position.x, position.y);
-            beginShape();
-            curveVertex(position.x, position.y);
-            curveVertex(position.x, position.y);
-            float step = edgeLength / numberOfEdgePoints;
-            float x = 0;
-            float y = 0;
-            int i = 0;
-            while(i < numberOfEdgePoints) { // first edge
-                x+= step * cos(radians(45));
-                y+= step * sin(radians(45));
-                vertex(x , y);
-                i++;
-            }
-            i = 0;
-            curveVertex(x, y);
-            while(i < numberOfEdgePoints) { // first edge
-                x+= step;
-                vertex(x , y);
-                i++;
-            }
-            i = 0;
-            curveVertex(x, y);
-            while(i < numberOfEdgePoints) { // first edge
-                x+= step * cos(radians(135));
-                y+= step * sin(radians(135));
-                vertex(x , y);
-                i++;
-            }
-            curveVertex(x, y);
-            curveVertex(x, y);
-            endShape(CLOSE);
-        popMatrix();
+        stroke(#ffffff);
+        shapeMode(CENTER);
+        beginShape();
+        float step = edgeLength / numberOfEdgePoints;
+        float x = 0;
+        float y = 0;
+        int i = 0;
+        while(i < numberOfEdgePoints) { // first edge
+            vertex(x , y);
+            // fill(#ffffff);
+            // ellipse(x, y, 3, 3);
+            x+= step * cos(radians(45));
+            y+= step * sin(radians(45));
+            i++;
+        }
+        i = 0;
+        while(i < numberOfEdgePoints) { // first edge
+            x+= step * cos(radians(360-45));
+            y+= step * sin(radians(360-45));
+            vertex(x , y);
+            // fill(#ffffff);
+            // ellipse(x, y, 3, 3);
+            i++;
+        }
+        i = 0;
+        while(i < numberOfEdgePoints) { // first edge
+            x-= step;
+            vertex(x , y);
+            // fill(#ffffff);
+            // ellipse(x, y, 3, 3);
+            i++;
+        }
+        endShape(CLOSE);
     }
 }

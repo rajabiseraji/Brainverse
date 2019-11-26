@@ -32,7 +32,7 @@ public class ManualScreen extends AppScreen{
         torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
         moon = new Moon(180 , 170, 10, 0.02, 300);
         ocean = new Ocean(20, 0.002, 100, 150);
-        star = new Star(100, 200);
+        star = new Star(new PVector(width / 2, 200));
         // for now we have Delta -> Torus, Tetha -> moon, Gamma -> ocean
     }
 
