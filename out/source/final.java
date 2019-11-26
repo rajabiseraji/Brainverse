@@ -409,7 +409,8 @@ public class ManualScreen extends AppScreen{
         torus = new Torus(5, 25, 10); // 20, 100, 30 are standard
         moon = new Moon(180 , 170, 10, 0.02f, 300);
         ocean = new Ocean(20, 0.002f, 100, 150);
-        star = new Star(new PVector(width / 2, 200));
+        star = new Star(new PVector(width / 2, 300), 120, 20, 40, 2, 10);
+        // PVector position, float edgeLength, int angleDivision, int numberOfEdgePoints, float pointSize,  int shapeRepetitionNumber
         // for now we have Delta -> Torus, Tetha -> moon, Gamma -> ocean
     }
 
@@ -779,27 +780,37 @@ public class Star {
     PVector position;
     int numberOfEdgePoints = 10;
     float edgeLength = 100;
+    int angleDivision = 10;
+    float pointSize = 2;
+    int shapeRepetitionNumber = 10;
 
-    Star(PVector position) {
+    Star(PVector position, float edgeLength, int angleDivision, int numberOfEdgePoints, float pointSize, int shapeRepetitionNumber) {
         this.position = position;
+        this.edgeLength = edgeLength;
+        this.angleDivision = angleDivision;
+        this.numberOfEdgePoints = numberOfEdgePoints;
+        this.pointSize = pointSize;
+        this.shapeRepetitionNumber = shapeRepetitionNumber;
     }
 
     public void display() {
-        int k = 10;
-        float step =  TWO_PI / k;
-        float angle = 0;
-        while(angle < TWO_PI) {
-            pushMatrix();
-            translate(position.x, position.y);
-            rotate(angle);
-            drawRoundedTrianlge();
-            popMatrix();
-            angle += step;
+        for (int i = 0; i < shapeRepetitionNumber; i++) {
+            float step =  TWO_PI / angleDivision;
+            float angle = i * (PI/10);
+            while(angle < TWO_PI + i * (PI/10)) {
+                pushMatrix();
+                translate(position.x, position.y);
+                scale(0.9f + 0.05f*i);
+                rotate(angle);
+                drawRoundedTrianlge();
+                popMatrix();
+                angle += step;
+            }
         }
     }
 
     public void drawRoundedTrianlge() {
-        noFill();
+        // noFill();
         stroke(0xffffffff);
         shapeMode(CENTER);
         beginShape();
@@ -808,9 +819,9 @@ public class Star {
         float y = 0;
         int i = 0;
         while(i < numberOfEdgePoints) { // first edge
-            vertex(x , y);
-            // fill(#ffffff);
-            // ellipse(x, y, 3, 3);
+            // vertex(x , y);
+            fill(0xffffffff);
+            // ellipse(x, y, pointSize, pointSize);
             x+= step * cos(radians(45));
             y+= step * sin(radians(45));
             i++;
@@ -819,17 +830,17 @@ public class Star {
         while(i < numberOfEdgePoints) { // first edge
             x+= step * cos(radians(360-45));
             y+= step * sin(radians(360-45));
-            vertex(x , y);
-            // fill(#ffffff);
-            // ellipse(x, y, 3, 3);
+            // vertex(x , y);
+            fill(0xffffffff);
+            ellipse(x, y, pointSize, pointSize);
             i++;
         }
         i = 0;
         while(i < numberOfEdgePoints) { // first edge
             x-= step;
-            vertex(x , y);
-            // fill(#ffffff);
-            // ellipse(x, y, 3, 3);
+            // vertex(x , y);
+            fill(0xffffffff);
+            ellipse(x, y, pointSize, pointSize);
             i++;
         }
         endShape(CLOSE);

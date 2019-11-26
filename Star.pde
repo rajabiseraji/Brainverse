@@ -2,27 +2,37 @@ public class Star {
     PVector position;
     int numberOfEdgePoints = 10;
     float edgeLength = 100;
+    int angleDivision = 10;
+    float pointSize = 2;
+    int shapeRepetitionNumber = 10;
 
-    Star(PVector position) {
+    Star(PVector position, float edgeLength, int angleDivision, int numberOfEdgePoints, float pointSize, int shapeRepetitionNumber) {
         this.position = position;
+        this.edgeLength = edgeLength;
+        this.angleDivision = angleDivision;
+        this.numberOfEdgePoints = numberOfEdgePoints;
+        this.pointSize = pointSize;
+        this.shapeRepetitionNumber = shapeRepetitionNumber;
     }
 
     void display() {
-        int k = 10;
-        float step =  TWO_PI / k;
-        float angle = 0;
-        while(angle < TWO_PI) {
-            pushMatrix();
-            translate(position.x, position.y);
-            rotate(angle);
-            drawRoundedTrianlge();
-            popMatrix();
-            angle += step;
+        for (int i = 0; i < shapeRepetitionNumber; i++) {
+            float step =  TWO_PI / angleDivision;
+            float angle = i * (PI/10);
+            while(angle < TWO_PI + i * (PI/10)) {
+                pushMatrix();
+                translate(position.x, position.y);
+                scale(0.9 + 0.05*i);
+                rotate(angle);
+                drawRoundedTrianlge();
+                popMatrix();
+                angle += step;
+            }
         }
     }
 
     void drawRoundedTrianlge() {
-        noFill();
+        // noFill();
         stroke(#ffffff);
         shapeMode(CENTER);
         beginShape();
@@ -31,9 +41,9 @@ public class Star {
         float y = 0;
         int i = 0;
         while(i < numberOfEdgePoints) { // first edge
-            vertex(x , y);
-            // fill(#ffffff);
-            // ellipse(x, y, 3, 3);
+            // vertex(x , y);
+            fill(#ffffff);
+            // ellipse(x, y, pointSize, pointSize);
             x+= step * cos(radians(45));
             y+= step * sin(radians(45));
             i++;
@@ -42,17 +52,17 @@ public class Star {
         while(i < numberOfEdgePoints) { // first edge
             x+= step * cos(radians(360-45));
             y+= step * sin(radians(360-45));
-            vertex(x , y);
-            // fill(#ffffff);
-            // ellipse(x, y, 3, 3);
+            // vertex(x , y);
+            fill(#ffffff);
+            ellipse(x, y, pointSize, pointSize);
             i++;
         }
         i = 0;
         while(i < numberOfEdgePoints) { // first edge
             x-= step;
-            vertex(x , y);
-            // fill(#ffffff);
-            // ellipse(x, y, 3, 3);
+            // vertex(x , y);
+            fill(#ffffff);
+            ellipse(x, y, pointSize, pointSize);
             i++;
         }
         endShape(CLOSE);
