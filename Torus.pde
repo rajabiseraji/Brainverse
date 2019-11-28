@@ -95,7 +95,7 @@ public class Torus {
             if (i%2==0) {
                 // currentColorValue += step;
                 float noiseValue = noise(po * i * palinNoiseScale);
-                fill(noiseValue * 255, noiseValue * 255, noiseValue * 255, transparency * 255);
+                fill((int)(noiseValue * 255), (int) (noiseValue * 255), (int) (noiseValue * 255), transparency * 255);
             }
             else fill(-1);
             // point(x, y);

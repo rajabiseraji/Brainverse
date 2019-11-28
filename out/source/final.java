@@ -621,7 +621,7 @@ public class Ocean {
             pushMatrix();
             translate(originalPoint.x, originalPoint.y, originalPoint.z);
             noStroke();
-            fill((int)(255 * noiseValue),(int)(255 * noiseValue), (int)(255 * noiseValue), transparency * 255);
+            fill((int)(255 * random(p*i)),(int)(255 * random(p*i)), (int)(255 * random(p*i)), transparency * 255);
             // point(x, y, z);
             ellipse(0, 0, 4, 4);
             popMatrix();
@@ -829,7 +829,7 @@ public class Star {
             PVector originalPoint = new PVector(x, y);
             PVector pointWithVibration = originalPoint.add(s, s);
             // vertex(x , y);
-            fill(0xffffffff, transparency * 255);
+            fill((int)(noise(p * i * palinNoiseScale) * 255), (int)(noise(p * i * palinNoiseScale) * 255), (int)(noise(p * i * palinNoiseScale) * 255));
             ellipse(pointWithVibration.x, pointWithVibration.y, pointSize, pointSize);
             i++;
         }
@@ -958,7 +958,7 @@ public class Torus {
             if (i%2==0) {
                 // currentColorValue += step;
                 float noiseValue = noise(po * i * palinNoiseScale);
-                fill(noiseValue * 255, noiseValue * 255, noiseValue * 255, transparency * 255);
+                fill((int)(noiseValue * 255), (int) (noiseValue * 255), (int) (noiseValue * 255), transparency * 255);
             }
             else fill(-1);
             // point(x, y);
