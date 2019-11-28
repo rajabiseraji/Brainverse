@@ -32,67 +32,29 @@ public void setup() {
   img = loadImage("bg.png");
   background(img);
   // background(#525252);
-
-  TitleScreen titleScreen = new TitleScreen();
-  ChooseScreen chooseScreen = new ChooseScreen();
   ManualScreen manualScreen = new ManualScreen();
-  appScreens.add(titleScreen);
-  appScreens.add(chooseScreen);
-  appScreens.add(manualScreen);
   appScreens.add(manualScreen);
 }
 
 public void draw() {
   background(img);
-
-  // screen management
-  screenManager();
   appScreens.get(currentScreen).display();
 }
 
-public void screenManager() {
-  if(currentScreen == 0) {
-    elapsedTime = millis();
-    if(elapsedTime > 10000)
-      currentScreen++;
-  } else if(currentScreen == 1) {
-    ChooseScreen chooseScreen = (ChooseScreen)appScreens.get(1);
-    if(chooseScreen.startScanning) {
-      elapsedTime = millis();
-      if(elapsedTime > 2000)
-        currentScreen = chooseScreen.automaticOrManual ? 2 : 3;
-      chooseScreen.startScanning = false;
-    }
-  } else if(currentScreen == 2 || currentScreen == 3) {
-    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
-    if (m.backButton.active) {
-      currentScreen = 1;
-      m.backButton.active = false;
-    }
-  }
-}
-
-
 public void mouseDragged(MouseEvent event) {
-  // println("I'm dragged");
-  if (currentScreen == 3 || currentScreen == 2) {
     ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
     m.mouseDragHandler(event);
-  }
 }
 
+// fallback for stupid MACs :))
 public void mouseMoved() {
-  if(currentScreen == 3 || currentScreen == 2) {
-    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
-    m.mouseMoveHandler();
-  }
+  ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+  m.mouseMoveHandler();
 }
 
 public void keyPressed(KeyEvent event){
-  if(currentScreen == 3 || currentScreen == 2) {
-    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
-    m.keyHandler(event);
-  }
+  ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+  m.keyHandler(event);
 }
 
 public void changeScreen(int newScreenNumber) {
@@ -101,13 +63,8 @@ public void changeScreen(int newScreenNumber) {
 
 
 public void mouseClicked(MouseEvent event) {
-  if(currentScreen == 1) {
-    ChooseScreen chooseScreen = (ChooseScreen)appScreens.get(1);
-    chooseScreen.mouseClickHandler(event);
-  } else if(currentScreen == 3 || currentScreen == 2) {
-    ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
-    m.mouseClickHandler(event);
-  }
+  ManualScreen m = (ManualScreen)appScreens.get(currentScreen);
+  m.mouseClickHandler(event);
 }
 
 abstract class AppScreen {
@@ -278,71 +235,6 @@ public class Button {
     
     public void updateShape(PShape newpattern){
     }
-
-}
-public class ChooseScreen extends AppScreen {
-  PFont firaSansBook;
-  PFont firaSansExtraBold;
-  Button autoButton, manualButton, scannerButton;
-  Boolean automaticOrManual = true;
-  boolean lastAutoButtonState = false;
-  boolean lastManualButtonState = false;
-  boolean startScanning = false;
-
-  ChooseScreen() {
-    PVector buttonSize = new PVector(width / 2 - 10, width / 2 - 10);
-    PVector buttonPosition = new PVector(5, (height - buttonSize.y) / 2);
-    PVector manualButtonPosition = new PVector(buttonSize.x + 10, buttonPosition.y);
-    PVector firstButtonImageSize = new PVector(buttonSize.x * 2 / 3, buttonSize.x * 2 / 3);
-    PVector manualButtonImageSize = new PVector(buttonSize.x * 0.8f, buttonSize.y * 0.8f);
-    // PVector backButtonImageSize = new PVector(width/15,height/20);
-    // PVector backButtonPosition = new PVector(20, height-40);
-    PVector scannerButtonImageSize = new PVector(1043/8, 560/8);
-    PVector scannerButtonPosition = new PVector((width-scannerButtonImageSize.x)/2, (height-scannerButtonImageSize.y)-40);
-    //1043 × 560 scanner
-
-    PImage museHeadset = loadImage("headset.png", "png");
-    PImage menuSlider = loadImage("slider.png", "png");
-    PImage scanner = loadImage("scanner.png", "png");
-    // PImage back = loadImage("back.png", "png");
-    autoButton = new Button(buttonSize, buttonPosition, museHeadset, firstButtonImageSize, "Automatic", automaticOrManual);
-    manualButton = new Button(buttonSize, manualButtonPosition, menuSlider, manualButtonImageSize, "Manual", !automaticOrManual);
-    scannerButton = new Button(scannerButtonImageSize, scannerButtonPosition, scanner, scannerButtonImageSize, "", false);
-    // backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", false);
-
-
-    firaSansBook = createFont("FiraSans-Book.otf", 16);
-    firaSansExtraBold = createFont("FiraSans-ExtraBold.otf", 16);
-  }
-
-  public void display() {
-    autoButton.display();
-    manualButton.display();
-    scannerButton.display();
-    // backButton.display();
-  }
-
-  public void mouseClickHandler(MouseEvent event) {
-    scannerButton.mouseClickHandler(event);
-    if(scannerButton.active) {
-      startScanning = true;
-      scannerButton.active = false;
-    }
-
-    lastAutoButtonState = autoButton.active;
-    lastManualButtonState = manualButton.active;
-
-    autoButton.mouseClickHandler(event);
-    manualButton.mouseClickHandler(event);
-
-    if(lastAutoButtonState && manualButton.active)
-      autoButton.deactivateButton();
-    else if(lastManualButtonState && autoButton.active)
-      manualButton.deactivateButton();
-
-    automaticOrManual = autoButton.active ? true : false;
-    
-  }
 
 }
 public class Flower {
@@ -978,24 +870,6 @@ public class Star {
         vibrationStepSize = map(newBetaValue, 0, 100, 2, 5); // 30, 100
         rotationSpeedDegPerSec = map(newBetaValue, 0, 100, 0.5f, 3); // 30, 100
     }
-}
-public class TitleScreen extends AppScreen {
-  PImage titleImage, titleBar;
-  PVector titleImageSize, titleBarSize;
-  TitleScreen() {
-    // titleImage = loadImage("NVtitle.png"); 
-    // titleImageSize = new PVector(titleImage.width, titleImage.height);
-    // titleBar = loadImage("titlebar.png");
-    // titleBarSize = new PVector(titleBar.width, titleBar.height);
-
-    // titleImage.resize((int)(width * 0.7), (int)((width * 0.7) * (titleImageSize.y / titleImageSize.x)));
-    // titleBar.resize((int)(width * 0.7), (int)((width * 0.7) * (titleBarSize.y / titleBarSize.x)));
-  }
-
-  public void display() {
-    // image(titleImage, (width - titleImageSize.x) / 2, 0.1 * height);
-    // image(titleBar, (width - titleImageSize.x) / 2, 0.9 * height);
-  }
 }
 
 

@@ -14,7 +14,7 @@ void setup() {
   background(img);
   // background(#525252);
   ManualScreen manualScreen = new ManualScreen();
-  appScreens.add(titleScreen);
+  appScreens.add(manualScreen);
 }
 
 void draw() {
