@@ -16,6 +16,11 @@ public class Torus {
     int N=20; // is the number of points in the big circle's circumference 
     // if the N is high it means the number of mini circles are higher!
 
+    int po = 0;
+
+    public float palinNoiseScale = 0.002;
+    public float palinNoiceValue = 0;
+
     float transparency = 1;
     
     public Torus (int numberOfCircle, float bigCircleRadius, float miniCircleRadius, PVector position) {
@@ -76,6 +81,7 @@ public class Torus {
         }
         popMatrix();
         k+=1;
+        po++;
     }
 
     private void circles(int k) {
@@ -87,12 +93,13 @@ public class Torus {
             float y = miniCircleRadius*sin(radians(ang+k));
             strokeWeight(2);
             if (i%2==0) {
-                currentColorValue += step;
-                stroke(currentColor, transparency * 255);
+                // currentColorValue += step;
+                float noiseValue = noise(po * i * palinNoiseScale);
+                fill(noiseValue * 255, noiseValue * 255, noiseValue * 255, transparency * 255);
             }
-            else stroke(-1);
-            point(x, y);
-            // ellipse(x, y, 2, 2);
+            else fill(-1);
+            // point(x, y);
+            ellipse(x, y, 5, 5);
         }
     }
 

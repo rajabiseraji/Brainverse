@@ -20,14 +20,7 @@ public class ManualScreen extends AppScreen{
 
     int dominantWave = 0; // 0 delta, 1 tetha, 2 gamma, 3 beta
 
-    Button backButton;
-
     public ManualScreen () {
-        PVector backButtonImageSize = new PVector(width/15,height/20);
-        PVector backButtonPosition = new PVector(80, height-80);
-        PImage back = loadImage("back.png", "png");
-        backButton = new Button(backButtonImageSize, backButtonPosition, back, backButtonImageSize, "", false);
-
         waves.add(alphaWave);
         waves.add(betaWave);
         waves.add(gammaWave);
@@ -35,15 +28,15 @@ public class ManualScreen extends AppScreen{
         waves.add(deltaWave);
 
         PVector alphaSliderPosition = new PVector(120, (height * 3 / 4) - 50);
-        alphaSlider = new Slider(alphaSliderPosition, 20, "Alpha", 20, 100, new PVector(width - 160, 0));
+        alphaSlider = new Slider(alphaSliderPosition, 20, "wave 1", 20, 100, new PVector(width - 160, 0));
         PVector betaSliderPosition = new PVector(120, (height * 3 / 4) );
-        betaSlider = new Slider(betaSliderPosition, 20, "Beta", 20, 100, new PVector(width - 160, 0));
+        betaSlider = new Slider(betaSliderPosition, 20, "Wave 2", 20, 100, new PVector(width - 160, 0));
         PVector gammaSliderPosition = new PVector(120, (height * 3 / 4) + 50);
-        gammaSlider = new Slider(gammaSliderPosition, 20, "Gamma", 20, 100, new PVector(width - 160, 0));
+        gammaSlider = new Slider(gammaSliderPosition, 20, "Wave 3", 20, 100, new PVector(width - 160, 0));
         PVector tethaSliderPosition = new PVector(120, (height * 3 / 4) + 100);
-        tethaSlider = new Slider(tethaSliderPosition, 20, "Tetha", 20, 100, new PVector(width - 160, 0));
+        tethaSlider = new Slider(tethaSliderPosition, 20, "Wave 4", 20, 100, new PVector(width - 160, 0));
         PVector deltaSliderPosition = new PVector(120, (height * 3 / 4) + 150);
-        deltaSlider = new Slider(deltaSliderPosition, 20, "Delta", 20, 100, new PVector(width - 160, 0));
+        deltaSlider = new Slider(deltaSliderPosition, 20, "Wave 5", 20, 100, new PVector(width - 160, 0));
         
         torus = new Torus(5, 25, 10, new PVector(width /2 , 320)); // 20, 100, 30 are standard
         moon = new Moon(180 , 170, 10, 0.02, 300, new PVector(width /2 , 320));
@@ -55,8 +48,6 @@ public class ManualScreen extends AppScreen{
     }
 
     void display() {
-        backButton.display();
-
         alphaWave.waveValue = alphaSlider.drawSlider();
         betaWave.waveValue = betaSlider.drawSlider();
         gammaWave.waveValue = gammaSlider.drawSlider();
@@ -120,7 +111,7 @@ public class ManualScreen extends AppScreen{
     }
 
     void mouseClickHandler(MouseEvent event) {
-        backButton.mouseClickHandler(event);
+        // backButton.mouseClickHandler(event);
     }
 
     void keyHandler(KeyEvent event) {

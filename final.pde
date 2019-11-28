@@ -10,15 +10,14 @@ int elapsedTime = 0;
 Vector<AppScreen> appScreens = new Vector<AppScreen>();
 void setup() {
   size(768, 1024, P3D);
-  img = loadImage("bg.png");
-  background(img);
+  background(0);
   // background(#525252);
   ManualScreen manualScreen = new ManualScreen();
   appScreens.add(manualScreen);
 }
 
 void draw() {
-  background(img);
+  background(0);
   appScreens.get(currentScreen).display();
 }
 
