@@ -473,12 +473,12 @@ public class ManualScreen extends AppScreen{
         PVector deltaSliderPosition = new PVector(120, (height * 3 / 4) + 150);
         deltaSlider = new Slider(deltaSliderPosition, 20, "Delta", 20, 100, new PVector(width - 160, 0));
         
-        torus = new Torus(5, 25, 10, new PVector(width /2 , 250)); // 20, 100, 30 are standard
-        moon = new Moon(180 , 170, 10, 0.02f, 300, new PVector(width /2 , 250));
-        ocean = new Ocean(20, 0.002f, 100, 150, new PVector(width /2 , 250));
+        torus = new Torus(5, 25, 10, new PVector(width /2 , 320)); // 20, 100, 30 are standard
+        moon = new Moon(180 , 170, 10, 0.02f, 300, new PVector(width /2 , 320));
+        ocean = new Ocean(20, 0.002f, 100, 150, new PVector(width /2 , 320));
         star = new Star(new PVector(width / 2, 400), 180, 15, 10, 4, 10);
         // PVector position, float edgeLength, int angleDivision, int numberOfEdgePoints, float pointSize,  int shapeRepetitionNumber
-        flower = new Flower(new PVector(width /2, 250), 170, 5, 0.5f, 10, 7, 3);
+        flower = new Flower(new PVector(width /2, 320), 170, 5, 0.5f, 10, 7, 3);
         // Flower (PVector position, float radius, int numberOfFlowers, float rotationSpeedDegPerSec, float radiusOffest, int numberOfStarPoints, int numberOfStarPointsOffset) 
     }
 
@@ -983,18 +983,18 @@ public class TitleScreen extends AppScreen {
   PImage titleImage, titleBar;
   PVector titleImageSize, titleBarSize;
   TitleScreen() {
-    titleImage = loadImage("NVtitle.png"); 
-    titleImageSize = new PVector(titleImage.width, titleImage.height);
-    titleBar = loadImage("titlebar.png");
-    titleBarSize = new PVector(titleBar.width, titleBar.height);
+    // titleImage = loadImage("NVtitle.png"); 
+    // titleImageSize = new PVector(titleImage.width, titleImage.height);
+    // titleBar = loadImage("titlebar.png");
+    // titleBarSize = new PVector(titleBar.width, titleBar.height);
 
-    titleImage.resize((int)(width * 0.7f), (int)((width * 0.7f) * (titleImageSize.y / titleImageSize.x)));
-    titleBar.resize((int)(width * 0.7f), (int)((width * 0.7f) * (titleBarSize.y / titleBarSize.x)));
+    // titleImage.resize((int)(width * 0.7), (int)((width * 0.7) * (titleImageSize.y / titleImageSize.x)));
+    // titleBar.resize((int)(width * 0.7), (int)((width * 0.7) * (titleBarSize.y / titleBarSize.x)));
   }
 
   public void display() {
-    image(titleImage, (width - titleImageSize.x) / 2, 0.1f * height);
-    image(titleBar, (width - titleImageSize.x) / 2, 0.9f * height);
+    // image(titleImage, (width - titleImageSize.x) / 2, 0.1 * height);
+    // image(titleBar, (width - titleImageSize.x) / 2, 0.9 * height);
   }
 }
 
