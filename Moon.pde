@@ -56,7 +56,10 @@ public class Moon {
             float y = (outerCircleRadius + step) * sin(angle);
             fill(#ffffff, transparency * noiseValue * 255);
             stroke(#ffffff, 0);
-            ellipse(x, y, 2, 2);
+            pushMatrix();
+            translate(x, y);
+            box(5);
+            popMatrix();
             k++;
         }
     }
@@ -71,7 +74,10 @@ public class Moon {
             float y = (innerCircleRadius + step) * sin(angle);
             fill(#ffffff, transparency * noiseValue * 255);
             stroke(#ffffff, 0);
-            ellipse(x, y, 2, 2);
+            pushMatrix();
+            translate(x, y);
+            box(20);
+            popMatrix();
             k++;
         }
     }
@@ -103,9 +109,9 @@ public class Moon {
 
     public void setTetha(int newTethaValue) {
         this.tethaValue = newTethaValue;
-        circleDivisions = (int)map(newTethaValue, 0, 100, 100, 500); // 0 -> 20 ... 1 up -> 1 up
-        outerCircleRadius = map(newTethaValue, 0, 100, 40, 200);
-        innerCircleRadius = map(newTethaValue, 0, 100, 30, 190); 
+        circleDivisions = (int)map(newTethaValue, 0, 100, 30, 100); // 0 -> 20 ... 1 up -> 1 up
+        outerCircleRadius = map(newTethaValue, 0, 100, 70, 250);
+        innerCircleRadius = map(newTethaValue, 0, 100, 50, 230); 
         palinNoiseScale = map(newTethaValue, 0, 100, 0.2, 0.003); // 30, 100
     }
 }
